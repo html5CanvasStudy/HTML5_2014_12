@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>HTML5</title>
+		<style type="text/css">
+			
+		</style>
+		<script type="text/javascript">
+			function init() {
+				var theCanvas = document.getElementById("canvas");
+				var context   = theCanvas.getContext("2d");
+
+				drawScreen(context);
+			}
+
+			function drawScreen(context) {
+				context.fillStyle = '#aaaaaa';
+				context.fillRect(0, 0, 700, 700);
+				context.fillStyle = '#000000';
+				context.font = '20px _sans';
+				context.textBaseline = 'top';
+				context.fillText("Canvas!", 0, 0);
+
+				context.beginPath();
+				context.strokeStyle = "black";
+				context.lineWith = 5;
+				// x, y, 반지름, startAngle, endAngle, 방향(false:시계방향, true:반전)
+				context.arc(25, 50, 20, (Math.PI/180)*0, (Math.PI/180)*360, false);
+				context.stroke();
+				context.closePath();
+
+				context.beginPath();
+				context.strokeStyle = "black";
+				context.lineWith = 5;
+				context.moveTo(30, 75);
+				context.lineTo(100, 200);
+				// x1, y1, x2, y2, 반지름  현재 위치와 (x1, y1)지점을 연결한 선과 (x1, y1)과 (x2, y2)를 연결한 접점에 호를 그리는데, (x1, y1) 지점과 현재 위치간의 선을 연결해준다.??
+				context.arcTo(250, 250, 100, 100, 20);
+				context.stroke();
+				context.closePath();
+
+				context.beginPath();
+				context.strokeStyle = "black";
+				context.lineWith = 5;
+				context.moveTo(100, 0);
+				context.quadraticCurveTo(200, 25, 100, 50); // cpx, cpy, x, y  (x,0)부터 (x,y)까지 선을 그리는데 (cpx, cpy) 좌표까지 쭈욱 잡아당긴 모양이 그려진다.
+				context.stroke();
+				context.closePath();
+			}
+		</script>
+	</head>
+	<body onload="init();">
+		<div style="position: absolute; top: 50px; left: 50px;">
+			<canvas id="canvas" width="1000" height="1000">
+				Your browser does not support HTML5 Canvas.
+			</canvas>
+		</div>
+	</body>
+</html>
