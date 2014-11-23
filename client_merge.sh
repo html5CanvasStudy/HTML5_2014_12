@@ -15,7 +15,7 @@ read commitmsg
 git remote -v
 git fetch upstream
 git merge upstream/master
-git commit -m '${commitmsg}'
+git commit -m $commitmsg
 git push origin master
 
 
