@@ -12,5 +12,9 @@ show history >>
   </li>
 </ul>
 
-Extra Utils
-<a href='/docs/util_docs.md'>Utility Documentation</a>
+Extra Utils >>
+<ul>
+  <li>
+    <a href='/docs/util_docs.md'>Utility Documentation</a>
+  </li>
+</ul>
