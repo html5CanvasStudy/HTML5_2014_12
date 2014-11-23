@@ -11,3 +11,6 @@ show history >>
     <a href='/history/20141121.md'>2014.11.21</a>
   </li>
 </ul>
+
+Extra Utils
+<a href='/docs/util_docs.md'>Utility Documentation</a>
