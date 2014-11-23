@@ -10,12 +10,13 @@ echo -e 'github auto client-remote merge\nver.0.1\n2014.11.23\nauthor : Juneyoun
 echo -e 'enter commit message'
 read commitmsg
 
+# A1 - git remote rm origin
 # A1 - git remote add upstream $remoteaddr
 
 git remote -v
 git fetch upstream
 git merge upstream/master
-git commit -m $commitmsg
+git commit -m "$commitmsg"
 git push origin master
 
 
