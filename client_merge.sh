@@ -11,6 +11,8 @@ echo -e 'enter commit message'
 read commitmsg
 
 git remote rm origin
+git remote rm upstream
+git remote add origin $remoteaddr
 git remote add upstream $remoteaddr
 
 git remote -v
