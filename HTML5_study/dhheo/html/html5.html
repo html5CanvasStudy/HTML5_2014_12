@@ -20,7 +20,7 @@
 				context.font = '20px _sans';
 				context.textBaseline = 'top';
 				context.fillText("Canvas!", 0, 0);
-
+				
 				context.beginPath();
 				context.strokeStyle = "black";
 				context.lineWith = 5;
@@ -28,9 +28,9 @@
 				context.arc(25, 50, 20, (Math.PI/180)*0, (Math.PI/180)*360, false);
 				context.stroke();
 				context.closePath();
-
+				
 				context.beginPath();
-				context.strokeStyle = "black";
+				//context.strokeStyle = "black";
 				context.lineWith = 5;
 				context.moveTo(30, 75);
 				context.lineTo(100, 200);
@@ -38,12 +38,22 @@
 				context.arcTo(250, 250, 100, 100, 20);
 				context.stroke();
 				context.closePath();
+				
+				context.beginPath();
+				//context.strokeStyle = "black";
+				context.lineWith = 5;
+				context.moveTo(100, 0);
+				// cpx, cpy, x, y  moveTo부터 (x,y)까지 선을 그리는데 (cpx, cpy) 좌표만큼의 조절점 즉, 총 3개의 조절점을 가진 베지어 곡선이 그려진다
+				context.quadraticCurveTo(200, 25, 100, 50);
+				context.stroke();
+				context.closePath();
 
 				context.beginPath();
 				context.strokeStyle = "black";
 				context.lineWith = 5;
-				context.moveTo(100, 0);
-				context.quadraticCurveTo(200, 25, 100, 50); // cpx, cpy, x, y  (x,0)부터 (x,y)까지 선을 그리는데 (cpx, cpy) 좌표까지 쭈욱 잡아당긴 모양이 그려진다.
+				context.moveTo(250, 0);
+				//cp1x, cp1y, cp2x, cp2y, x, y moveTo부터 (x,y)까지 선을 그리는데 (cp1x, cp1y) (cp2x, cp2y)좌표를 포함한 4개의 조절점을 가진 베지어 곡선이 그려진다.
+				context.bezierCurveTo(100, 125, 400, 175, 250, 300); 
 				context.stroke();
 				context.closePath();
 			}
