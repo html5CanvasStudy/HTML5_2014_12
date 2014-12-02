@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>HTML5 Canvas Example 2-2</title>
+	<script type="text/javascript">
+		window.addEventListener('load', eventWindowLoaded, false);
+
+	    function eventWindowLoaded(){
+	    	canvasApp();
+	    }
+
+	    function canvasSupport(){
+	    	return document.getElementById("canvas").getContext("2d"); 
+	    }
+
+	    function canvasApp(){
+	    	if(!canvasSupport()){
+	     		return;
+	    	}else{
+	    		var theCanvas = document.getElementById("canvas");
+	    		var context = theCanvas.getContext("2d");
+	    	}
+
+	    	drawScreen();
+
+	    	function drawScreen(){
+	    		context.strokeStyle = "black";
+	    		context.lineWidth = 10;
+	    		context.lineCap = 'square';
+	    		context.beginPath();
+	    		context.moveTo(20, 0);
+	    		context.lineTo(100, 0);
+	    		context.stroke();
+	    		context.closePath();
+	    	}
+	    }
+	</script>
+</head>
+
+<body>
+	<div style="position:absolute;top:50px;left:50px;">
+		<canvas id="canvas" width="500" height="500">
+			Your Browser does not support HTML5 Canvas.
+		</canvas>
+	</div>
+</body>
