@@ -14,13 +14,16 @@
 			}
 
 			function drawScreen(context, area) {
-				context.fillStyle = '#aaaaaa';
+				context.save();
+				context.fillStyle = "#aaaaaa";
 				context.fillRect(0, 0, area.getAttribute("width"), area.getAttribute("height"));
+				context.clearRect(1, 1, parseInt(area.getAttribute("width"))-2, parseInt(area.getAttribute("height"))-2);
 				context.fillStyle = '#000000';
 				context.font = '20px _sans';
 				context.textBaseline = 'top';
 				context.fillText("Canvas!", 0, 0);
-				
+				context.restore();
+
 				context.beginPath();
 				context.strokeStyle = "black";
 				context.lineWith = 5;
@@ -30,7 +33,6 @@
 				context.closePath();
 				
 				context.beginPath();
-				//context.strokeStyle = "black";
 				context.lineWith = 5;
 				context.moveTo(30, 75);
 				context.lineTo(100, 200);
@@ -40,7 +42,6 @@
 				context.closePath();
 				
 				context.beginPath();
-				//context.strokeStyle = "black";
 				context.lineWith = 5;
 				context.moveTo(100, 0);
 				// cpx, cpy, x, y  moveTo부터 (x,y)까지 선을 그리는데 (cpx, cpy) 좌표만큼의 조절점 즉, 총 3개의 조절점을 가진 베지어 곡선이 그려진다
@@ -95,6 +96,7 @@
 
 				// 예제 2-6 시작 p76
 				// 사각형그리기
+				context.save();
 				context.fillStyle = "black";
 				context.fillRect(600, 10, 200, 200);
 
@@ -119,8 +121,91 @@
 				// source-atop 설정
 				context.globalCompositeOperation = "source-atop";
 				context.fillRect(650, 60, 50, 50);
+				context.restore();
 
-				/* good ~~ good ~~ good ~~ */
+				// 예제 2-7
+				// 사각형을 먼저 그리면 안됨! 이유는 모르지만 중심점이 맞지 않아 벽에 붙음!
+				context.save();
+				context.setTransform(1, 0, 0, 1, 0, 0);
+				context.rotate(45*Math.PI/180);
+				context.fillRect(100, 100, 50, 50);
+				context.restore();
+
+				// 예제 2-9
+				// 검은색 사각형
+				context.fillStyle = "black";
+				context.fillRect(70, 20, 25, 25);
+
+				// 빨간색 사각형
+				context.save();
+				context.setTransform(1, 0, 0, 1, 0, 0);
+				var angleInRadians = 45*Math.PI/180;
+				var x = 100;
+				var y = 100;
+				var width = 50;
+				var height = 50;
+				context.translate(x+(0.5*width), y+(0.5*height));
+				context.rotate(angleInRadians);
+				context.fillStyle = "red";
+				context.fillRect(-0.5*width, -0.5*height, width, height);
+				context.restore();
+
+				// 예제 2-10
+				// 빨간색 사각형
+				context.save();
+				repeat(context, 45, 20);
+				repeat(context, 75, 70);
+				repeat(context, 90, 120);
+				repeat(context, 120, 170);
+				context.restore();
+
+				// 예제 2-11
+				context.save();
+				context.setTransform(1, 0, 0, 1, 0, 0);
+				var x = 50;
+				var y = 350;
+				var width = 50;
+				var height = 50;
+				context.translate(x+(0.5*width), y+(0.5*height));
+				context.scale(2, 2);
+				//context.rotate(45*Math.PI/180);
+				context.fillStyle = "red";
+				context.fillRect(-0.5*width, -0.5*height, width, height);
+				context.restore();
+
+				// 예제 2-14
+				context.save();
+				// 수평 그레디언트 값은 0
+				var gr = context.createLinearGradient(200, 320, 300, 320); // 왼쪽 상단의 x, y 오른쪽 하단의 x, y
+
+				// 색상 정지점 추가
+				gr.addColorStop(0, "rgb(255, 0, 0)");
+				gr.addColorStop(0.5, "rgb(0, 255, 0)");
+				gr.addColorStop(1, "rgb(255, 0, 0)");
+
+				// fillStyle 그레디언트 설정
+				context.fillStyle = gr;
+				context.fillRect(200, 320, 100, 100);
+				context.fillRect(200, 420, 50, 100);
+				context.fillRect(200, 520, 200, 100);
+
+				context.strokeRect(410, 320, 100, 100);
+				context.strokeRect(410, 420, 50, 100);
+				context.strokeRect(410, 520, 200, 100);
+				context.restore();
+			}
+
+			function repeat(ctx, degree, xAxis) {
+				ctx.setTransform(1, 0, 0, 1, 0, 0);
+				var angleInRadians = degree*Math.PI/180;
+				var x = xAxis;
+				var y = 250;
+				var width = 40;
+				var height = 40;
+				ctx.translate(x+(0.5*width), y+(0.5*height));
+				ctx.rotate(angleInRadians);
+				ctx.fillStyle = "blue";
+				ctx.fillRect(-0.5*width, -0.5*height, width, height);
 			}
 		</script>
 	</head>

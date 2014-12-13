@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>HTML5</title>
+		<style type="text/css">
+			
+		</style>
+		<script type="text/javascript">
+			function init() {
+				var theCanvas = document.getElementById("canvas");
+				var context   = theCanvas.getContext("2d");
+				drawScreen(context, theCanvas);
+			}
+			function drawScreen(context, area) {
+				context.save();
+				// 예제 2-21
+				var gr = context.createRadialGradient(50,50,25,50,50,100); // 50 50ÀÇ Áß½ÉÁ¡¿¡ ¹ÝÁö¸§ 25, 50 50ÀÇ Áß½ÉÁ¡¿¡ ¹ÝÁö¸§ 100 
+				
+				// 색상 정지점을 추가한다.
+				gr.addColorStop(0, 'rgb(255,0,0)');
+				gr.addColorStop(0.5, 'rgb(0,255,0)');
+				gr.addColorStop(1, 'rgb(255,0,0)');
+				
+				// fillStyle에 그레디언트를 설정한다.
+				context.fillStyle = gr;
+				context.fillRect(0,0,200,200);
+				context.restore();
+				
+				context.save();
+				// 예제 2-22
+				var gr = context.createRadialGradient(250,50,25,300,100,100); // 250 50ÀÇ Áß½ÉÁ¡¿¡ ¹ÝÁö¸§ 25, 300 100ÀÇ Áß½ÉÁ¡¿¡ ¹ÝÁö¸§ 100
+				
+				gr.addColorStop(0, 'rgb(255,0,0)');
+				gr.addColorStop(0.5, 'rgb(0,255,0)');
+				gr.addColorStop(1, 'rgb(255,0,0)');
+				
+				context.fillStyle = gr;
+				context.fillRect(201,0,200,200);
+				context.restore();
+				/*
+				context.save();
+				// 예제 2-23
+				var gr = context.createRadialGradient(450,50,25,500,100,100);
+				gr.addColorStop(0, 'rgb(255,0,0)');
+				gr.addColorStop(0.5, 'rgb(0,255,0)');
+				gr.addColorStop(1, 'rgb(255,0,0)');
+				
+				context.fillStyle = gr;
+				context.arc(502, 100, 100, (Math.PI/180)*0, (Math.PI/180)*360, false);
+				context.fill();
+				context.restore();
+				*/
+				context.save();
+				// 예제 2-24
+				var gr = context.createRadialGradient(650, 50, 25, 700, 100, 100);
+				gr.addColorStop(0, 'rgb(255,0,0)');
+				gr.addColorStop(0.5, 'rgb(0,255,0)');
+				gr.addColorStop(1, 'rgb(255,0,0)');
+				
+				context.strokeStyle = gr;
+				context.arc(700, 100, 50, (Math.PI/180)*0, (Math.PI/180)*360, false);
+				context.stroke();
+				context.restore();
+				
+				context.save();
+				// 예제 2-25
+				var fillImg = new Image();
+				fillImg.src = 'snow.png';
+				
+				fillImg.onload = function() {
+					var fillPattern = context.createPattern(fillImg, 'repeat'); // repeat, repeat-x, repeat-y, no-repeat
+					context.fillStyle = fillPattern;
+					context.fillRect(800, 0, 200, 200);
+				}
+				context.restore();
+				
+				context.save();
+				// 예제 2-26
+				var fillImg = new Image();
+				fillImg.src = 'snow.png';
+				
+				fillImg.onload = function(){
+					var fillPattern1 = context.createPattern(fillImg, 'no-repeat');
+					var fillPattern2 = context.createPattern(fillImg, 'repeat-x');
+					var fillPattern3 = context.createPattern(fillImg, 'repeat-y');
+					
+					context.fillStyle = fillPattern1;
+					context.fillRect(0,0,100,100);
+					
+					context.fillStyle = fillPattern2;
+					context.fillRect(0,110,100,100);
+					
+					context.fillStyle = fillPattern3;
+					context.fillRect(0,220,100,100);
+				}
+				context.restore(); 
+				
+				context.save();
+				// 예제 2-27
+				context.fillStyle = 'red';
+				
+				context.shadowOffsetX = 4;
+				context.shadowOffsetY = 4;
+				context.shadowColor = 'black';
+				context.shadowBlur = 4;
+				context.fillRect(100, 210, 100, 100);
+				
+				context.shadowOffsetX = -4;
+				context.shadowOffsetY = -4;
+				context.shadowColor = 'black';
+				context.shadowBlur = 4;
+				context.fillRect(210, 210, 100, 100);
+				
+				context.shadowOffsetX = 10;
+				context.shadowOffsetY = 10;
+				context.shadowColor = 'rgb(100,100,100)';
+				context.shadowBlur = 8;
+				context.arc(200, 500, 100, (Math.PI/180)*0, (Math.PI/180)*360, false);
+				context.fill();
+				context.restore();
+			}
+		</script>
+	</head>
+	<body onload="init();">
+		<div style="position: absolute; top: 50px; left: 50px;">
+			<canvas id="canvas" width="1000" height="700">
+				Your browser does not support HTML5 Canvas.
+			</canvas>
+		</div>
+	</body>
+</html>
