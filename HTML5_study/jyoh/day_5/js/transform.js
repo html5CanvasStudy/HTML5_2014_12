@@ -21,7 +21,15 @@ function executeCanvas(){
 		var height = 50;
 
 		//파라미터 6 개 받는데 이유를 찾아보기 
+		//context.setTransform(1, 0, 0, 1, 0, 0);
+		//가로로 몇배 늘릴 것인지
+		//가로로 얼마나 뒤틀 것인지
+		//세로로 얼마나 뒤틀 것인지
+		//세로로 몇배 늘릴 것인지
+		//시작 점의 좌표 x, y
 		context.setTransform(1, 0, 0, 1, 0, 0);
+
+
 		context.translate(x + width/2, y + height/2);
 		context.rotate(((Math.PI)/180) * 45);
 		context.scale(2, 1);

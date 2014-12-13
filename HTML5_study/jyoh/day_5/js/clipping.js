@@ -48,9 +48,13 @@ function executeCanvasApp(){
 		context.restore();
 
 		//reclip to the entire canvas
+		
 		context.beginPath();
+		/*
 		context.rect(0, 0, 500, 500);
 		context.clip();
+		
+		*/
 
 		//draw a blue line that is not clipped
 		context.beginPath();
