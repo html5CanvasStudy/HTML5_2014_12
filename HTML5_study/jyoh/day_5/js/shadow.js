@@ -25,11 +25,11 @@ function runCanvasApp(){
 	function drawScreen(){
 		context.fillStyle = 'rgba(0, 255, 0, 0.5)';
 
-		context.shadowOffsetX = 4;
+		context.shadowOffsetX = 200;
 		context.shadowOffsetY = 4;
 		//context.shadowOffsetX = -4;
 		//context.shadowOffsetY = -4;
-		context.shadowBlur = 10;
+		context.shadowBlur = 2000;
 		context.shadowColor = 'blue';
 
 		context.fillRect(100, 100, 200, 200)

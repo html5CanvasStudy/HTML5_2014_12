@@ -40,7 +40,7 @@ function executeCanvasApp(){
 
 		//방사형 그라디언트
 		//첫번째 원의 중심 좌표, 반지름, 두번째 원의 중심 좌표, 반지름
-		//gr = context.createRadialGradient(50, 50, 25, 100, 100, 100);
+		gr = context.createRadialGradient(50, 50, 25, 100, 100, 100);
 
 		//지점 추가 
 		//gr.addColorStop(0, 	'#FF0000');
