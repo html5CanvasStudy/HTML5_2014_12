@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>CH3EX1: Text Arranger Version 1.0</title>
+		<style type="text/css">
+			
+		</style>
+		<script type="text/javascript">
+			/*
+				폰트종류 : normal, italic, oblique, inherit
+				폰트두께 : normal, bold, bolder, lighter, 100, 200, 300, 400, 500, 600, 700, 800, 900, inherit, auto
+				폰트모양 : serif, sans-serif, cursive, fantasy, monospace
+				
+				<input type="range" min="0" max="200" step="1" value="50" />
+				min   : 범위안의 최소값
+				max   : 범위안의 최대값
+				step  : range 슬라이더의 눈금 단위
+				value : 범위의 기본값
+				
+				fillStyle, strokeStyle 의 색상은 jscolor.com 참조
+				jscolor.js를 다운받아서 <script src="jscolor.js"> 선언후 <input class="color" /> 사용 가능
+				
+				context.textBaseline = "middle"
+				top 		: 그리드 박스의 맨 위 또는 폰트 모양에서 가장 높은 위치가 기준선이 된다. 이 값을 설정하면 문자열의 가장 높은 y가 기준선이 되기 때문에 폰트가 기준선아래로 내려간다.
+				hanging 	: top 기준선보다 약간 아래. 폰트 모양의 맨 위 바로 아래이며, 폰트가 걸쳐있는 것처럼 보이는 위치의 가로선이다.
+				alphabetic 	: 아라비아어, 라틴어, 히브리어 같은 활자의 아래 기준선이다.
+				ideographic : 한글, 카타카나, 히라가나 같은 활자의 아래 기준선이다.
+				bottom 		: 그리드 박스의 맨 아래 기준선이다. 이 기준선을 선택하면 문자열의 가장 낮은 y 위치가 기준선이 되기 때문에 폰트가 가장 높은 위치가 올라간다.
+
+				context.textAlign = "center"
+				center 	: 가로로 정중앙 위치를 기준으로 문자열을 정렬한다. Text Arranger 애플리케이션에서 문자열을 가로 정렬할 때 이 값을 이용한다.
+				start 	: 문자열의 x위치 바로 뒤로 문자열이 출력된다.
+				end 	: 문자열의 x위치 바로 앞으로 문자열이 출력된다.
+				left	: 문자열의 x위치에 문자열의 가장 왼쪽이 오도록 출력된다. start와 같은 모양이다.
+				right	: 문자열의 x위치에 문자열의 가장 오른쪽이 오도록 출력된다. end와 같은 모양이다.
+			*/
+			
+		</script>
+	</head>
+	<body onload="init();">
+		<div style="position: absolute; top: 50px; left: 50px;">
+			<canvas id="canvas" width="1000" height="700">
+				Your browser does not support HTML5 Canvas.
+			</canvas>
+		</div>
+	</body>
+</html>
