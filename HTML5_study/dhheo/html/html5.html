@@ -10,17 +10,17 @@
 				var theCanvas = document.getElementById("canvas");
 				var context   = theCanvas.getContext("2d");
 
-				drawScreen(context);
+				drawScreen(context, theCanvas);
 			}
 
-			function drawScreen(context) {
+			function drawScreen(context, area) {
 				context.fillStyle = '#aaaaaa';
-				context.fillRect(0, 0, 700, 700);
+				context.fillRect(0, 0, area.getAttribute("width"), area.getAttribute("height"));
 				context.fillStyle = '#000000';
 				context.font = '20px _sans';
 				context.textBaseline = 'top';
 				context.fillText("Canvas!", 0, 0);
-
+				
 				context.beginPath();
 				context.strokeStyle = "black";
 				context.lineWith = 5;
@@ -28,9 +28,9 @@
 				context.arc(25, 50, 20, (Math.PI/180)*0, (Math.PI/180)*360, false);
 				context.stroke();
 				context.closePath();
-
+				
 				context.beginPath();
-				context.strokeStyle = "black";
+				//context.strokeStyle = "black";
 				context.lineWith = 5;
 				context.moveTo(30, 75);
 				context.lineTo(100, 200);
@@ -38,20 +38,95 @@
 				context.arcTo(250, 250, 100, 100, 20);
 				context.stroke();
 				context.closePath();
+				
+				context.beginPath();
+				//context.strokeStyle = "black";
+				context.lineWith = 5;
+				context.moveTo(100, 0);
+				// cpx, cpy, x, y  moveTo부터 (x,y)까지 선을 그리는데 (cpx, cpy) 좌표만큼의 조절점 즉, 총 3개의 조절점을 가진 베지어 곡선이 그려진다
+				context.quadraticCurveTo(200, 25, 100, 50);
+				context.stroke();
+				context.closePath();
 
 				context.beginPath();
 				context.strokeStyle = "black";
 				context.lineWith = 5;
-				context.moveTo(100, 0);
-				context.quadraticCurveTo(200, 25, 100, 50); // cpx, cpy, x, y  (x,0)부터 (x,y)까지 선을 그리는데 (cpx, cpy) 좌표까지 쭈욱 잡아당긴 모양이 그려진다.
+				context.moveTo(250, 0);
+				//cp1x, cp1y, cp2x, cp2y, x, y moveTo부터 (x,y)까지 선을 그리는데 (cp1x, cp1y) (cp2x, cp2y)좌표를 포함한 4개의 조절점을 가진 베지어 곡선이 그려진다.
+				context.bezierCurveTo(100, 125, 400, 175, 250, 300); 
 				context.stroke();
 				context.closePath();
+
+				// 예제 2-5 시작 p73
+				// 사각형 그리기
+				context.fillRect(350, 10, 200, 200);
+				context.save();
+				context.beginPath();
+
+				// 350,10을 시작점으로 하는 가로, 세로 50인 사각형 영역을 선택
+				context.rect(350, 10, 50, 50);//rect이외에 arc를 사용하여 영역을 정해도 된다.
+				context.clip();
+
+				//빨간색 원
+				context.beginPath();
+				context.strokeStyle = "red";
+				context.lineWidth = 5;
+				context.arc(450, 110, 100, (Math.PI/180)*0, (Math.PI/180)*360, false);
+				context.stroke();
+				context.closePath();
+				context.restore();
+
+				context.save(); // wrap clip by save, restore
+				//전체 캔버스를 영역으로 선택한다.
+				context.beginPath();
+				context.rect(350, 10, 200, 200);
+				context.clip();
+
+				//파란색 원
+				context.beginPath();
+				context.strokeStyle = "blue";
+				context.lineWidth = 5;
+				context.arc(450, 100, 50, (Math.PI/180)*0, (Math.PI/180)*360, false);
+				context.stroke();
+				context.closePath();
+				// 예제 2-5 끝.
+
+				context.restore();
+
+				// 예제 2-6 시작 p76
+				// 사각형그리기
+				context.fillStyle = "black";
+				context.fillRect(600, 10, 200, 200);
+
+				// globalCompositeOperation 값은 그대로 둔다. 빨간색 사각형
+				context.fillStyle = "red";
+				context.fillRect(590, 1, 50, 50);
+
+				// source-over로 설정
+				context.globalCompositeOperation = "source-over";
+
+				// 옆에 빨간색 사각형
+				context.fillRect(650, 1, 50, 50);
+
+				
+				// destination-over으로 설정
+				context.globalCompositeOperation = "destination-over";//맨 아래로 들어감
+				context.fillRect(590, 60, 50, 50);
+
+				// globalAlpha 설정
+				context.globalAlpha = 0.5;
+
+				// source-atop 설정
+				context.globalCompositeOperation = "source-atop";
+				context.fillRect(650, 60, 50, 50);
+
+				/* good ~~ good ~~ good ~~ */
 			}
 		</script>
 	</head>
 	<body onload="init();">
 		<div style="position: absolute; top: 50px; left: 50px;">
-			<canvas id="canvas" width="1000" height="1000">
+			<canvas id="canvas" width="1000" height="700">
 				Your browser does not support HTML5 Canvas.
 			</canvas>
 		</div>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>HTML5 Canvas Example 2-4</title>
+<script type="text/javascript">
+window.addEventListener('load', eventWindowLoaded, false);
+
+function eventWindowLoaded(){
+	canvasApp();
+}
+
+function canvasSupport(){
+	return document.getElementById("canvas").getContext("2d");
+}
+
+function canvasApp(){
+	if(!canvasSupport()){
+		return;
+	}else{
+		var theCanvas = document.getElementById("canvas");
+		var context = theCanvas.getContext("2d");
+	}
+
+	drawScreen();
+
+	function drawScreen(){
+		// 변경 사항을 넣는 위치.
+
+		// 화면에 검은색의 큰 사각형을 그림.
+		context.fillStyle = "black";
+		context.fillRect(10, 10, 200, 200);
+		
+		// 빨간색 사각형을 그림.
+		context.fillStyle = "red";
+		context.fillRect(1, 1, 50, 50);
+
+		// 나중에 그려진 그림을 먼저 그려진 그림보다 위에 위치하도록 설정.
+		context.globalCompositeOperation = "source-over";
+
+		// 빨간색 사각형을 그림.
+		context.fillRect(60, 1, 50, 50);
+
+		// 먼저 그려진 그림보다 아래에 위치 하도록 설정.
+		context.globalCompositeOperation = "destination-over";
+
+		// 빨간색 사각형을 그림.
+		context.fillRect(1, 60, 50, 50);
+
+		// 그려질 그림에 불투명도를 줌.
+		context.globalAlpha = .5;
+
+		// 그려질 그림의 밑그림과 겹쳐질 영역을 불투명하게 출력 되도록 설정.
+		context.globalCompositeOperation = "source-atop";
+
+		// 빨간색 사각형을 그림.
+		context.fillRect(60, 60, 50, 50);
+	}
+}
+</script>
+</head>
+
+<body>
+<div style="position:absolute;top:50px;left:50px">
+	<canvas id="canvas" width="500" height="500">
+		Your browser does not support HTML5 Canvas.
+	</canvas>
+</div>
+</body>
+
+</html>
