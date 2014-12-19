@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='UTF-8'>
+	<title>Text Arranger 0.1</title>
+	<script src="../../../common/js/logger.js"></script>
+	<script src="../lib/jscolor/jscolor.js"></script>
+	<script src="../js/textarranger.js"></script>
+</head>
+<body>
+	<div style='position:absolute; top:50px; left:50px'>
+		<canvas id='canvas1' width='500' height='300'>
+			Yo Browser does not support HTML5 Canvas
+		</canvas>
+
+		<form>
+			Text : <input type='text' id='text' placeholder='hold'>
+			<br>
+			Fill or Stroke
+			<select id='fillorstroke'>
+				<option value='fill'>fill</option>
+				<option value='stroke'>stroke</option>
+				<option value='both'>both</option>
+			</select>
+			<br>
+
+			Font Style
+			<select id='fontStyle'>
+				<option value='normal'>normal</option>
+				<option value='italic'>italic</option>
+				<option value='oblique'>oblique</option>
+			</select>
+			<br>
+
+			Font Weight
+			<select id='fontWeight'>
+				<option value='normal'>normal</option>
+				<option value='bold'>bold</option>
+				<option value='bolder'>bolder</option>
+				<option value='lighter'>lighter</option>
+			</select>
+			<br>
+
+			Text Font
+			<select id='textFont'>
+				<option value='serif'>serif</option>
+				<option value='sans-serif'>sans-serif</option>
+				<option value='cursive'>cursive</option>
+				<option value='fantasy'>fantasy</option>
+				<option value='monospace'>monospace</option>
+			</select>
+			<br>
+
+			Text Size
+			<input type='range' id='textSize' min='10' max='100' step='1' value='50'>
+			<br>
+
+			Text Color
+			<input class="color" id="textColor" value="000000">
+			<br>
+
+			Text Vertical Align(baseLine)
+			<select id='textBaseline'>
+				<option value='top'>top</option>
+				<option value='middle' selected>middle</option>
+				<option value='bottom'>bottom</option>
+				<option value='alphabetic'>alphabetic</option>
+				<option value='ideographic'>ideographic</option>
+			</select>
+			<br>
+
+			Text Horizontal Align(baseLine)
+			<select id='textAlign'>
+				<option value='start'>start</option>
+				<option value='center' selected>center</option>
+				<option value='end'>end</option>
+				<option value='left'>left</option>
+				<option value='right'>right</option>
+			</select>
+			<br>
+
+			TextAlpha
+			<input type='range' id='textAlpha' min='0.0' max='1.0' step='0.01' value='1.0'>
+			<br>
+
+			<!-- Gradient && Pattern -->
+
+			<!-- -->
+			
+			Canvas Width
+			<input id='canvasWidth' type='range' min='50' max='1000' step='1' value='500'>
+			<br>
+
+			Canvas Height
+			<input id='canvasHeight' type='range' min='50' max='1000' step='1' value='300'>
+			<br>
+
+			
+			Canvas Style Width (Scale)
+			<input id='canvasStyleWidth' type='range' min='0' max='1000' step='1' value='500'>
+			<br>
+
+			Canvas Style Height (Scale)
+			<input id='canvasStyleHeight' type='range' min='0' max='1000' step='1' value='300'>
+			<br><br>
+
+			<!-- toDataURL -->
+
+			Image format
+			<select id='imageFormat'>
+				<option value='jpg'>jpg</option>
+				<option value='png'>png</option>
+			</select>
+			<br>
+
+			Compression Level
+			<input id='compLevel' type='range' min='0.0' max='1.0' step='0.01' value='1.0'>
+			<br>
+
+			<input type='button' id='dataGenerateBtn' value='Image Generate'>
+			<br><br>
+
+			<textarea id='imageDisplay' rows='10' cols='30'>
+			</textarea>
+			<br>
+		</form>
+	</div>
+</body>
+</html>
