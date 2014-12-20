@@ -17,6 +17,11 @@
 				   - (x0, y0) 부터 (x1, y1) 까지 변화.(addColorStop의 순서대로)
 				4. context.createRadialGradient(x0, y0, radius0, x1, y1, radius1)
 				   - 첫번째원부터 두번째 원까지 변화.(addColorStop의 순서대로)
+				5. toDataURL(type) 실제로는 MIME types 된다는데 두개밖에 안되는거같다 =_=a
+				   - type : image/png(default), image/jpeg
+				   
+				   cf) image/jpeg
+				   The second argument, if it is a number in the range 0.0 to 1.0 inclusive, must be treated as the desired quality level. If it is not a number or is outside that range, the user agent must use its default value, as if the argument had been omitted.
 			*/
 			function init() {
 				var textAlpha 	  = 1;
