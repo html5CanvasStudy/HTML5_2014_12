@@ -65,7 +65,7 @@
 				context.save();
 				// 예제 2-25
 				var fillImg = new Image();
-				fillImg.src = 'snow.png';
+				fillImg.src = '../../resources/canvas/img/snow.png';
 				
 				fillImg.onload = function() {
 					var fillPattern = context.createPattern(fillImg, 'repeat'); // repeat, repeat-x, repeat-y, no-repeat
@@ -77,7 +77,7 @@
 				context.save();
 				// 예제 2-26
 				var fillImg = new Image();
-				fillImg.src = 'snow.png';
+				fillImg.src = '../../resources/canvas/img/snow.png';
 				
 				fillImg.onload = function(){
 					var fillPattern1 = context.createPattern(fillImg, 'no-repeat');
@@ -123,7 +123,7 @@
 	</head>
 	<body onload="init();">
 		<div style="position: absolute; top: 50px; left: 50px;">
-			<canvas id="canvas" width="1000" height="700">
+			<canvas id="canvas" width="1250" height="700">
 				Your browser does not support HTML5 Canvas.
 			</canvas>
 		</div>

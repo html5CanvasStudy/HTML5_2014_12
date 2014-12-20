@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+ <head>
+  <meta charset="utf-8">
+  <title>enabled</title> 
+  <script type="text/javascript" src="../../resources/canvas/js/jscolor.js"></script>
+  <script>
+    window.onload = function(){
+	    var canvas = document.getElementById("canvas")
+	    var myContext = canvas.getContext("2d")
+	    
+	    //그래이디언트
+	    //createLinearGradient(시작가로좌표, 시작세로좌표, 끝점가로, 끝점세로)
+	    //createRadialGradient(제1원의 가로좌표, 제1원의 세로좌표, 반경,제2원의 가로좌표, 제2원의 세로좌표, 반경)
+	    //색추가addColorStop(위치(최소0~최대1), 색상)
+	    
+	    var color1 = "#ffffff";
+	    var color2 = "#000000";
+
+	    document.getElementById("color1").addEventListener("change", color1Changed, false);
+	    document.getElementById("color2").addEventListener("change", color2Changed, false);
+
+	    draw();
+
+	    function color1Changed(e) {
+	    	color1 = "#"+e.target.value;
+	    	draw();
+	    }
+
+	    function color2Changed(e) {
+	   		color2 = "#"+e.target.value;
+	   		draw();
+	    }
+
+	    function draw() {
+	    	var myRadial = myContext.createRadialGradient(45,45,10,62,60,80); // 변수화
+		    myRadial.addColorStop(0, color1);
+		    myRadial.addColorStop(1, color2);
+		    myContext.fillStyle = myRadial;
+		    myContext.arc(80,80,80,0,Math.PI*2,true); // 변수화
+		    myContext.fill();
+	    }        
+   }
+  </script>
+ </head>
+
+ <body>
+ 	<div>
+		<canvas id="canvas" width="500" height="300"></canvas> 
+ 	</div>
+    
+	<input class="color" id="color1" value="ffffff" /><br>
+	<input class="color" id="color2" value="000000" /><br>
+ </body>
+</html>

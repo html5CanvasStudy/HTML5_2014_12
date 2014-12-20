@@ -6,37 +6,22 @@
 		<style type="text/css">
 			
 		</style>
-		<script type="text/javascript" src="js/jscolor.js"></script>
+		<script type="text/javascript" src="../../resources/canvas/js/jscolor.js"></script>
 		<script type="text/javascript">
 			/*
-				폰트종류 : normal, italic, oblique, inherit
-				폰트두께 : normal, bold, bolder, lighter, 100, 200, 300, 400, 500, 600, 700, 800, 900, inherit, auto
-				폰트모양 : serif, sans-serif, cursive, fantasy, monospace
-				
-				<input type="range" min="0" max="200" step="1" value="50" />
-				min   : 범위안의 최소값
-				max   : 범위안의 최대값
-				step  : range 슬라이더의 눈금 단위
-				value : 범위의 기본값
-				
-				fillStyle, strokeStyle 의 색상은 jscolor.com 참조
-				jscolor.js를 다운받아서 <script src="jscolor.js"> 선언후 <input class="color" /> 사용 가능
-				
-				context.textBaseline = "middle"
-				top 		: 그리드 박스의 맨 위 또는 폰트 모양에서 가장 높은 위치가 기준선이 된다. 이 값을 설정하면 문자열의 가장 높은 y가 기준선이 되기 때문에 폰트가 기준선아래로 내려간다.
-				hanging 	: top 기준선보다 약간 아래. 폰트 모양의 맨 위 바로 아래이며, 폰트가 걸쳐있는 것처럼 보이는 위치의 가로선이다.
-				alphabetic 	: 아라비아어, 라틴어, 히브리어 같은 활자의 아래 기준선이다.
-				ideographic : 한글, 카타카나, 히라가나 같은 활자의 아래 기준선이다.
-				bottom 		: 그리드 박스의 맨 아래 기준선이다. 이 기준선을 선택하면 문자열의 가장 낮은 y 위치가 기준선이 되기 때문에 폰트가 가장 높은 위치가 올라간다.
+				3-2와 동일함.  Alpha부터 추가된 내용
 
-				context.textAlign = "center"
-				center 	: 가로로 정중앙 위치를 기준으로 문자열을 정렬한다. Text Arranger 애플리케이션에서 문자열을 가로 정렬할 때 이 값을 이용한다.
-				start 	: 문자열의 x위치 바로 뒤로 문자열이 출력된다.
-				end 	: 문자열의 x위치 바로 앞으로 문자열이 출력된다.
-				left	: 문자열의 x위치에 문자열의 가장 왼쪽이 오도록 출력된다. start와 같은 모양이다.
-				right	: 문자열의 x위치에 문자열의 가장 오른쪽이 오도록 출력된다. end와 같은 모양이다.
+				context.globalAlpha		: 0.0(투명) 1.0(불투명) 0.1(10%) 0.5(50%)
+				context.shadowColor		: 그림자의 색상. 다른 fillStyle, strokeStyle와 같이 사용한다. #RRGGBB
+				context.shadowOffsetX	: 그림자의 x 오프셋. 양수,음수 가능.
+				context.shadowOffsetY	: 그림자의 y 오프셋. 양수,음수 가능.
+				context.shadowBlur		: 그림자의 퍼짐 효과. 숫자가 높을수록 넓게 퍼짐.
 			*/
 			function init() {
+				var textAlpha 	  = 1; // 추가
+				var shadowX 	  = 1; // 추가
+				var shadowY 	  = 1; // 추가
+				var shadowBlur 	  = 1; // 추가
 				var fontSize 	  = "50";
 				var fillOrStroke  = "fill";
 				var fontFace 	  = "serif";
@@ -45,25 +30,36 @@
 				var fontWeight 	  = "normal";
 				var fontStyle 	  = "normal";
 				var textFillColor = "#ff0000";
+				var shadowColor   = "#707070"; // 추가
 				var message 	  = "your text";
 				var theCanvas 	  = document.getElementById("canvas");
 				var textBox 	  = document.getElementById("textBox");
+				var shadow_x 	  = document.getElementById("shadowX"); 	// 추가
+				var shadow_y 	  = document.getElementById("shadowY"); 	// 추가
 				var textSize 	  = document.getElementById("textSize");
 				var textFont 	  = document.getElementById("textFont");
 				var textAlig 	  = document.getElementById("textAlign");
+				var globalAlpha	  = document.getElementById("textAlpha"); 	// 추가
 				var fontStyl 	  = document.getElementById("fontStyle");
 				var fonWeight 	  = document.getElementById("fontWeight");
+				var shadowBlr	  = document.getElementById("shadowBlur"); 	// 추가
+				var shadowClr	  = document.getElementById("shadowColor"); // 추가
 				var textBasline   = document.getElementById("textBaseline");
 				var fillStroke 	  = document.getElementById("fillOrStroke");
 				var textFillClr   = document.getElementById("textFillColor");
 				var context		  = theCanvas.getContext("2d");
 
 				textBox.addEventListener("keyup", textBoxChanged, false);
+				shadow_x.addEventListener("change", shadowXChanged, false); // 추가
+				shadow_y.addEventListener("change", shadowYChanged, false); // 추가
 				textSize.addEventListener("change", textSizeChanged, false);
 				textFont.addEventListener("change", textFontChanged, false);
 				textAlig.addEventListener("change", textAlignChanged, false);
 				fontStyl.addEventListener("change", fontStyleChanged, false);
 				fonWeight.addEventListener("change", fontWeightChanged, false);
+				shadowBlr.addEventListener("change", shadowBlurChanged, false);  // 추가
+				shadowClr.addEventListener("change", shadowColorChanged, false); // 추가 
+				globalAlpha.addEventListener("change", textAlphaChanged, false); // 추가
 				fillStroke.addEventListener("change", fillOrStrokeChanged, false);
 				textBasline.addEventListener("change", textBaselineChanged, false);
 				textFillClr.addEventListener("change", textFillColorChanged, false);
@@ -91,7 +87,7 @@
 				}
 
 				function fontStyleChanged(e) {
-					//fontWeight="";
+					fontWeight="";
 					fontStyle = e.target.value;
 					drawScreen();
 				}
@@ -116,7 +112,34 @@
 					drawScreen();
 				}
 
+				/* 추가 */
+				function textAlphaChanged(e) {
+					textAlpha = e.target.value;
+					drawScreen();
+				}
+
+				function shadowXChanged(e) {
+					shadowX = e.target.value;
+					drawScreen();
+				}
+
+				function shadowYChanged(e) {
+					shadowY = e.target.value;
+					drawScreen();
+				}
+
+				function shadowBlurChanged(e) {
+					shadowBlur = e.target.value;
+					drawScreen();
+				}
+
+				function shadowColorChanged(e) {
+					shadowColor = "#"+e.target.value;
+					drawScreen();
+				}
+
 				function drawScreen() {
+					context.save();
 					// 배경
 					context.fillStyle = "#ffffaa";
 					context.fillRect(0, 0, theCanvas.width, theCanvas.height);
@@ -128,7 +151,13 @@
 					// 문자열
 					context.textBaseline = textBaseline;
 					context.textAlign 	 = textAlign;
-					context.font 		 = fontStyle + " " + fontWeight + " " + fontSize + "px " + fontFace;
+					context.font 		 = fontWeight + " " + fontStyle + " " + fontSize + "px " + fontFace;
+
+					context.globalAlpha		= textAlpha;	// 추가
+					context.shadowColor		= shadowColor;	// 추가
+					context.shadowOffsetX	= shadowX;		// 추가
+					context.shadowOffsetY	= shadowY;		// 추가
+					context.shadowBlur		= shadowBlur;	// 추가
 
 					var xPosition = (theCanvas.width/2);
 					var yPosition = (theCanvas.height/2);
@@ -149,6 +178,7 @@
 							context.strokeText(message, xPosition, yPosition);
 							break;
 					}
+					context.restore();
 				}
 			}
 		</script>
@@ -223,6 +253,22 @@
 					<option value="left">left</option>
 					<option value="right">right</option>
 				</select>
+				<br>
+
+				<!-- 추가 -->
+				Alpha : <input type="range" id="textAlpha" min="0.0" max="1.0" step="0.01" value="1.0" />
+				<br>
+
+				Shadow X : <input type="range" id="shadowX" min="-100" max="100" step="1" value="1" />
+				<br>
+
+				Shadow Y : <input type="range" id="shadowY" min="-100" max="100" step="1" value="1" />
+				<br>
+
+				Shadow Blur : <input type="range" id="shadowBlur" min="1" max="100" step="1" value="1" />
+				<br>
+
+				Shadow Color : <input class="color" id="shadowColor" value="707070" />
 			</form>
 		</div>
 	</body>
