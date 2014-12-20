@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>CH3EX1: Text Arranger Version 2.0</title>
+		<style type="text/css">
+			
+		</style>
+		<script type="text/javascript" src="../../resources/canvas/js/jscolor.js"></script>
+		<script type="text/javascript">
+			/*
+				3-6
+				1. context.measureText(msg) : msg의 width를 구한다
+				2. context.createPattern(img, repetition)
+				   - repetition : repeat(x,y 전부), repeat-x(x), repeat-y(y)
+				3. context.createLinearGradient(x0, y0, x1, y1)
+				   - (x0, y0) 부터 (x1, y1) 까지 변화.(addColorStop의 순서대로)
+				4. context.createRadialGradient(x0, y0, radius0, x1, y1, radius1)
+				   - 첫번째원부터 두번째 원까지 변화.(addColorStop의 순서대로)
+			*/
+			function init() {
+				var message 	= "HTML5 Canvas";
+				var theCanvas 	= document.getElementById("canvas");
+				var context		= theCanvas.getContext("2d");
+				var colorStops	= new Array();
+				
+				colorStops.push({color:"#FF0000", stopPercent:0});
+				colorStops.push({color:"#FFFF00", stopPercent:0.125});
+				colorStops.push({color:"#00FF00", stopPercent:0.375});
+				colorStops.push({color:"#0000FF", stopPercent:0.625});
+				colorStops.push({color:"#FF00FF", stopPercent:0.875});
+				colorStops.push({color:"#FF0000", stopPercent:1});
+				
+				gameLoop();
+				
+				function gameLoop() {
+					window.setTimeout(gameLoop, 100);
+					drawScreen();
+				}
+				
+				function drawScreen() {
+					context.fillStyle = "#000000";
+					context.fillRect(0, 0, theCanvas.width, theCanvas.height);
+					
+					context.font		 = "90px impact";
+					context.textAlign	 = "center";
+					context.textBaseline = "middle";
+					
+					var metrics			 = context.measureText(message);
+					var textWidth 		 = metrics.width;
+					var xPosition		 = (theCanvas.width/2);
+					var yPosition		 = (theCanvas.height/2);
+					var gradient		 = context.createLinearGradient(theCanvas.width/2, 0, theCanvas.width/2, theCanvas.height);
+					
+					for ( var i = 0; i < colorStops.length; i++ ) {
+						var tempColorStop	= colorStops[i];
+						var tempColor		= tempColorStop.color;
+						var tempStopPercent = tempColorStop.stopPercent;
+						
+						gradient.addColorStop(tempStopPercent, tempColor);
+						tempStopPercent += 0.015;
+						
+						if ( tempStopPercent > 1 ) {
+							tempStopPercent = 0;
+						}
+						
+						tempColorStop.stopPercent = tempStopPercent;
+						colorStops[i] = tempColorStop;
+					}
+					
+					context.fillStyle = gradient;
+					context.fillText(message, xPosition, yPosition);
+				}
+			}
+		</script>
+	</head>
+	<body onload="init();">
+		<div style="position: absolute; top: 10px; left: 10px;">
+		</div>
+			<canvas id="canvas" width="1000" height="700">
+				Your browser does not support HTML5 Canvas.
+			</canvas>
+	</body>
+</html>
