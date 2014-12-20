@@ -165,7 +165,7 @@
 				}
 				function createImageDataPressed(e) {
 					var imageDataDisplay = document.getElementById("imageDataDisplay");
-					imageDataDisplay.value = theCanvas.toDataURL(); // base64
+					imageDataDisplay.value = theCanvas.toDataURL("image/jpeg", 0.1); // base64
 					window.open(imageDataDisplay.value, "canvasImage", "left=0, top=0, width=" + theCanvas.width + ", height=" + theCanvas.height + ", toolbar=0, resizable=0");
 				}
 				
