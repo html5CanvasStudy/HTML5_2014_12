@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>part4-1</title>
+    <style type="text/css">
+
+    </style>
+    <script type="text/javascript">
+        /*
+            drawImage(Image, dx, dy) : img obj, xAxis, yAxis
+        */
+        function init() {
+            var theCanvas = document.getElementById("canvas");
+            var context  = theCanvas.getContext("2d");
+            var spaceShip = new Image();
+            spaceShip.addEventListener('load', eventShipLoaded, false);
+            spaceShip.src = "../../resources/canvas/img/ship1.png";
+
+            function eventShipLoaded() {
+                drawScreen();
+            }
+
+            function drawScreen() {
+                context.drawImage(spaceShip, 0, 0);
+                context.drawImage(spaceShip, 100, 100);
+            }
+        }
+    </script>
+</head>
+<body onload="init();">
+    <div style="position: absolute; top: 50px; left: 50px;">
+        <canvas id="canvas" width="1000" height="700">
+            Your browser does not support HTML5 Canvas.
+        </canvas>
+    </div>
+</body>
+</html>

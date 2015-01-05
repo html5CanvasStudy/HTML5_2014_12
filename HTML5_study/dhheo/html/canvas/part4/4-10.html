@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>part4-10</title>
+    <style type="text/css">
+
+    </style>
+    <script type="text/javascript">
+        function init() {
+            var theCanvas = document.getElementById("canvas");
+            var context  = theCanvas.getContext("2d");
+            var mapIndexOffset = -1;
+            var mapRows = 10;
+            var mapCols = 10;
+            var tileMap = [
+                [32, 31, 31, 31,  1, 31, 31, 31, 31, 32],
+                [1 ,  1,  1,  1,  1,  1,  1,  1,  1,  1],
+                [32,  1, 26,  1, 26,  1, 26,  1,  1, 32],
+                [32, 26,  1,  1, 26,  1,  1, 26,  1, 32],
+                [32,  1,  1,  1, 26, 26,  1, 26,  1, 32],
+                [32,  1,  1, 26,  1,  1,  1, 26,  1, 32],
+                [32,  1,  1,  1,  1,  1,  1, 26,  1, 32],
+                [1 ,  1, 26,  1, 26,  1, 26,  1,  1,  1],
+                [32,  1,  1,  1,  1,  1,  1,  1,  1, 32],
+                [32, 31, 31, 31,  1, 31, 31, 31, 31, 32]
+            ];
+            var spaceShip = new Image();
+            spaceShip.addEventListener('load', eventShipLoaded, false);
+            spaceShip.src = "../../resources/canvas/img/tanks_sheet.png";
+
+            function eventShipLoaded() {
+                drawScreen();
+            }
+
+            function drawScreen() {
+                for ( var rowCtr = 0; rowCtr < mapRows; rowCtr++ ) { // 타일을 넣을 X위치
+                    for (var colCtr = 0; colCtr < mapCols; colCtr++) { // 타일을 넣을 Y위치
+                        var tileId = tileMap[rowCtr][colCtr] + mapIndexOffset;
+                        var sourceX = Math.floor(tileId % 8) * 32;
+                        var sourceY = Math.floor(tileId / 8) * 32;
+                        context.drawImage(spaceShip, sourceX, sourceY, 32, 32, colCtr * 32, rowCtr * 32, 32, 32);
+                    }
+                }
+                setInterval(moveTank, 100);
+            }
+
+            var x = 0;
+            var y = 32;
+            var move = 0;
+            var tankFrame = 1;
+
+            function moveTank() { // 탱크이동하기!!
+                context.drawImage(spaceShip, 0, 0, 32, 32, Math.floor(x/16)*16, 32, 32, 32); // 움직이고있는 Tile 다시 그리기
+                context.save();
+                context.setTransform(1,0,0,1,0,0);
+                context.translate(x+16, y+16);
+                context.rotate(90*Math.PI/180);
+                context.drawImage(spaceShip, 32*(tankFrame%8), 32*(Math.floor(tankFrame/8)+1), 32, 32, -16, -16, 32, 32);
+                context.restore();
+                tankFrame++;
+                x++;
+                if ( x > 288 ) location.reload();
+                if ( tankFrame > 8 ) tankFrame = 1;
+            }
+        }
+    </script>
+</head>
+<body onload="init();">
+    <div style="position: absolute; top: 50px; left: 50px;">
+        <canvas id="canvas" width="1000" height="700">
+            Your browser does not support HTML5 Canvas.
+        </canvas>
+    </div>
+</body>
+</html>
