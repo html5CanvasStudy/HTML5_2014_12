@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="10" height="10" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="tanks" tilewidth="32" tileheight="32">
+  <image source="../../resources/canvas/img/tanks_sheet.png" width="256" height="128"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="10" height="10">
+  <data encoding="base64" compression="zlib">
+   eJxTYGBgkEfCjGh8EFaAihODYWqlcNAwNQpoYtjYCgyYdkthMRNdnRQWPbjMw6UOXQybP9DV4gsTBSLDGQBOUAVw
+  </data>
+ </layer>
+</map>

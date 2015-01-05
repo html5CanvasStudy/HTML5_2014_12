@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>part4-3</title>
+    <style type="text/css">
+
+    </style>
+    <script type="text/javascript">
+        /*
+            drawImage(Image, sx, sy, sw, sh, dx, dy, dw, dh)
+             - img obj, 원본이미지의 sx, sy, (sx, sy)로 시작하는 사각형의 sw, sh, xAxis, yAxis, width, height
+        */
+        function init() {
+            var theCanvas = document.getElementById("canvas");
+            var context  = theCanvas.getContext("2d");
+            var spaceShip = new Image();
+            spaceShip.addEventListener('load', eventShipLoaded, false);
+            spaceShip.src = "../../resources/canvas/img/fish.png";
+
+            function eventShipLoaded() {
+                drawScreen();
+            }
+
+            function drawScreen() {
+                context.fillStyle = "#aaaaaa";
+                context.fillRect(0, 0, 500, 500);
+                context.drawImage(spaceShip, 0, 0); // 물고기 이미지 원본
+                context.drawImage(spaceShip, 43, 0, 41, 43, 100, 100, 256, 256);
+            }
+        }
+    </script>
+</head>
+<body onload="init();">
+    <div style="position: absolute; top: 50px; left: 50px;">
+        <canvas id="canvas" width="1000" height="700">
+            Your browser does not support HTML5 Canvas.
+        </canvas>
+    </div>
+</body>
+</html>

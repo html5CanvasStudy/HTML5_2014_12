@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>part4-6</title>
+    <style type="text/css">
+
+    </style>
+    <script type="text/javascript">
+        function init() {
+            var theCanvas = document.getElementById("canvas");
+            var context  = theCanvas.getContext("2d");
+            var animationFrames = [1, 2, 3, 4, 5, 6, 7, 8];
+            var frameIndex = 0;
+            var dx      = 0;
+            var dy      = -1;
+            var x       = 50;
+            var y       = 50;
+            var spaceShip = new Image();
+            spaceShip.addEventListener('load', eventShipLoaded, false);
+            spaceShip.src = "../../resources/canvas/img/tanks_sheet.png";
+
+            function eventShipLoaded() {
+                startUp();
+            }
+
+            function startUp() {
+                setInterval(drawScreen, 100);
+            }
+
+            function drawScreen() {
+                y += dy;
+                x += dx;
+
+                context.fillStyle = "#aaaaaa";
+                context.fillRect(0, 0, 500, 500);
+
+                var sourceX = Math.floor(animationFrames[frameIndex]%8)*32;
+                var sourceY = Math.floor(animationFrames[frameIndex]/8)*32;
+
+                context.drawImage(spaceShip, sourceX, sourceY, 32, 32, x, y, 32, 32);
+
+                frameIndex++;
+                if ( frameIndex == animationFrames.length ) {
+                    frameIndex = 0;
+                }
+
+                if ( y == 0 ) y = 50;
+            }
+        }
+    </script>
+</head>
+<body onload="init();">
+    <div style="position: absolute; top: 50px; left: 50px;">
+        <canvas id="canvas" width="1000" height="700">
+            Your browser does not support HTML5 Canvas.
+        </canvas>
+    </div>
+</body>
+</html>
