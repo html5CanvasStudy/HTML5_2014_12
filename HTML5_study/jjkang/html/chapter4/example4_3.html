@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Title Here!!</title>
+<script type="text/javascript">
+	var tileSheet = new Image();
+
+	tileSheet.addEventListener('load', eventShipLoaded, false);
+	tileSheet.src = "images/ships.png";
+
+	function eventShipLoaded(){
+		canvasApp();		
+	}
+
+	function canvasApp(){
+		var theCanvas = document.getElementById("canvas");
+		var context = theCanvas.getContext("2d");
+
+		drawScreen();
+
+		function drawScreen(){
+			context.fillStyle = "#aaaaaa";
+			context.fillRect(0, 0, 500, 500);
+
+			context.drawImage(tileSheet, 32, 0, 32, 32, 50, 50, 64, 64);
+			// drawImage(imageObject, sx, sy, sw, sh, dx, dy, dw, dh);
+			// imageObject : 이미지 객체
+			// sx : tileSheet에서 사용할 이미지의 시작점 X
+			// sy : tileSheet에서 사용할 이미지의 시작점 Y
+			// sw : tileSheet에서 사용할 이미지의 가로 크기
+			// sh : tileSheet에서 사용할 이미지의 세로 크기
+			// dx : 출력할 이미지의 시작점 X
+			// dy : 출력할 이미지의 시작점 Y
+			// dw : 출력할 이미지의 가로 크기
+			// dh : 출력할 이미지의 세로 크기
+		}
+	}
+</script>
+</head>
+
+<body>
+	<div style="position:absolute; top:50px; left:50px;">
+		<canvas id="canvas" width="500" height="500">
+
+		</canvas>
+	</div>
+</body>
+
+</html>
