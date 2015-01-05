@@ -25,7 +25,7 @@
 		var theCanvas = document.getElementById("canvas");
 		var context = theCanvas.getContext("2d");
 
-		drawScreen();
+		startUp();
 
 		function drawScreen(){
 			x = x + dx;
@@ -49,9 +49,9 @@
 			}
 		}
 
-		// function startUp(){
-		// 	setInterval(drawScreen, 100);
-		// }
+		function startUp(){
+			setInterval(drawScreen, 100);
+		}
 	}
 </script>
 </head>

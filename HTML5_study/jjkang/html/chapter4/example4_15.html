@@ -31,6 +31,8 @@
 		startUp();
 
 		function drawScreen(){
+			context.fillStyle="#ffffff";
+			context.fillRect(0,0,300,300);
 			context.drawImage(photo, windowX, windowY, windowWidth, windowHeight, 0, 0, windowWidth * currentScale, windowHeight * currentScale);
 		}
 
@@ -42,6 +44,7 @@
 	document.onkeydown = function(e){
 		e = e?e:window.event;
 		console.log(e.keyCode + "down");
+		console.log(e.keyCode.UP);
 
 		switch(e.keyCode){
 			case 38:
