@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>part5-15</title>
+		<style type="text/css">
+			
+		</style>
+		<script type="text/javascript">
+			/*
+			* 5-14와 유사
+			* 중력이 제대로 적용되지는 않음 똑같은 높이만큼 튀어오름 계속~~~
+			* */
+			function init() {
+				var theCanvas = document.getElementById("canvas");
+				var context = theCanvas.getContext("2d");
+				var speed = 5;
+				var gravity = 0.1;
+				var angle = 295;
+				var radians = angle * Math.PI/180;
+				var radius = 15;
+				var vx = Math.cos(radians) * speed;
+				var vy = Math.sin(radians) * speed;
+				var p1 = {x:20, y:theCanvas.width-radius}; // 처음 공의 위치를 지정 정사각형의 캔버스가 아닌 경우 캔버스를 벗어날 수도 있음.
+				var ball = {x:p1.x, y:p1.y, velocityx: vx, velocityy:vy, radius:radius};
+				var points = new Array();
+				var pointImage = new Image();
+				pointImage.src = "../../resources/canvas/img/point.png";
+
+				setInterval(drawScreen, 33);
+				
+				function drawScreen() {
+					context.fillStyle = '#EEEEEE';
+					context.fillRect(0, 0, theCanvas.width, theCanvas.height);
+					
+					context.strokeStyle = '#000000';
+					context.strokeRect(1, 1, theCanvas.width-2, theCanvas.height-2);
+					ball.velocityy += gravity;
+
+					if ( ball.y + ball.radius > theCanvas.height ) { // 바닥에 닿으면...
+						ball.velocityy = -(ball.velocityy); // y축 방향으로 이동하는 값을 반대 방향으로 변경
+					}
+
+					ball.y += ball.velocityy; // 최초 canvas.width-radius값부터 y축으로 vy + gravity만큼 증감
+					ball.x += ball.velocityx; // 최초 20부터 x축으로 vx씩 증가
+
+					points.push({x:ball.x, y:ball.y});
+
+					for ( var i = 0; i < points.length; i++ ) {
+						context.drawImage(pointImage, points[i].x, points[i].y, 1, 1);
+					}
+
+					context.fillStyle = "#000000";
+					context.beginPath();
+					context.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2, true);
+					context.closePath();
+					context.fill();
+				}
+			}
+		</script>
+	</head>
+	<body onload="init();">
+		<div style="position: absolute; top: 10px; left: 10px;">
+			<canvas id="canvas" width="500" height="500">
+				Your browser does not support HTML5 Canvas. //적용 안되는 브라우저에서 나옴.
+			</canvas>
+		</div>
+	</body>
+</html>
