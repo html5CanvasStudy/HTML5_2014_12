@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>part5-19</title>
+		<style type="text/css">
+			
+		</style>
+		<script type="text/javascript">
+			/*
+			*
+			* */
+			function init() {
+				var theCanvas = document.getElementById("canvas");
+				var context = theCanvas.getContext("2d");
+				var easeValue = 0.05;
+				var p1 = {x:240, y:470};
+				var tempX;
+				var tempY;
+				var tempSpeed = 0.5;
+				var tempAngle = 270;
+				var tempRadians = tempAngle * Math.PI/180;
+				var tempvelocityx = Math.cos(tempRadians)*tempSpeed;
+				var tempvelocityy = Math.sin(tempRadians)*tempSpeed; // -0.5
+				var ship = {x:p1.x, y:p1.y, velocityx:tempvelocityx, velocityy:tempvelocityy};
+				var points = new Array();
+				var pointImage = new Image();
+				var shipImage = new Image();
+				pointImage.src = "../../resources/canvas/img/pointwhite.png";
+				shipImage.src = "../../resources/canvas/img/ship.png";
+
+				setInterval(drawScreen, 33);
+
+				function drawScreen() {
+					context.fillStyle = '#000000';
+					context.fillRect(0, 0, theCanvas.width, theCanvas.height);
+					
+					context.strokeStyle = '#ffffff';
+					context.strokeRect(1, 1, theCanvas.width-2, theCanvas.height-2);
+
+					ship.velocityx = ship.velocityx + (ship.velocityx*easeValue);
+					ship.velocityy = ship.velocityy + (ship.velocityy*easeValue);
+
+					ship.x += ship.velocityx;
+					ship.y += ship.velocityy;
+
+					points.push({x:ship.x, y:ship.y});
+
+					for ( var i = 0; i < points.length; i++ ) {
+						context.drawImage(pointImage, points[i].x+shipImage.width/2, points[i].y, 1, 1);
+					}
+					context.drawImage(shipImage, ship.x, ship.y);
+				}
+			}
+		</script>
+	</head>
+	<body onload="init();">
+		<div style="position: absolute; top: 10px; left: 10px;">
+			<canvas id="canvas" width="500" height="500">
+				Your browser does not support HTML5 Canvas. //적용 안되는 브라우저에서 나옴.
+			</canvas>
+		</div>
+	</body>
+</html>

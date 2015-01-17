@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>part5-4</title>
+    <style type="text/css">
+
+    </style>
+    <script type="text/javascript">
+        function init() {
+            var theCanvas = document.getElementById("canvas");
+            var context  = theCanvas.getContext("2d");
+            var speed = 5;
+            var p1 = {x:20, y:20};
+            var angle = 35;
+            var radians = 0;
+            var xunits = 0;
+            var yunits = 0;
+            var ball = {x:p1.x, y:p1.y};
+            var points = new Array();
+            var pointImage = new Image();
+            pointImage.src = "../../resources/canvas/img/point.png";
+
+            updateBall();
+            setInterval(drawScreen, 33);
+
+            function updateBall() {
+                radians = angle*Math.PI/180;
+                xunits = Math.cos(radians)*speed;
+                yunits = Math.sin(radians)*speed;
+            }
+
+            function drawScreen() {
+                context.fillStyle = '#EEEEEE';
+                context.fillRect(0, 0, theCanvas.width, theCanvas.height);
+
+                context.strokeStyle = '#000000';
+                context.strokeRect(1, 1, theCanvas.width-2, theCanvas.height-2);
+
+                ball.x += xunits;
+                ball.y += yunits;
+
+                points.push({x:ball.x, y:ball.y});
+                for ( var i = 0; i < points.length; i++ ) {
+                    context.drawImage(pointImage, points[i].x, points[i].y, 1, 1);
+                }
+
+                context.fillStyle = '#000000';
+                context.beginPath();
+                context.arc(ball.x, ball.y, 15, 0, Math.PI*2, true); // x, y, radius, startAngle, endAngle, anticlockwise
+                context.closePath();
+                context.fill();
+
+                if ( ball.x > theCanvas.width-15 || ball.x < 15 ) {
+                    angle = 180 - angle;
+                    updateBall();
+                } else if ( ball.y > theCanvas.height-15 || ball.y < 15 ) {
+                    angle = 360 - angle;
+                    updateBall();
+                }
+            }
+        }
+    </script>
+</head>
+<body onload="init();">
+    <div style="position: absolute; top: 50px; left: 50px;">
+        <canvas id="canvas" width="500" height="500">
+            Your browser does not support HTML5 Canvas.
+        </canvas>
+    </div>
+</body>
+</html>
