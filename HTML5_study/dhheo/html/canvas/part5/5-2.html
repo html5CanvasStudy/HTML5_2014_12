@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>part5-2</title>
+    <style type="text/css">
+
+    </style>
+    <script type="text/javascript">
+       /*
+        * =====두 점간의 이동====
+        * A^2 + B^2 = C^2
+        * (X0, Y0) (X1, Y1) 사이의 거리 : Math.sqrt((X1-X0)^2+(Y1-Y0)^2)
+        * 객체가 몇번 움직일지 계산 : moves = distance/speed
+        * x축과 y축으로 한번 이동할때마다 얼마나 움직일지 계산 : xAxis = (X1-X0)/moves, yAxis = (Y1-Y0)/moves
+        */
+        function init() {
+            var theCanvas = document.getElementById("canvas");
+            var context  = theCanvas.getContext("2d");
+            var speed = 5;
+            var p1 = {x:20, y:250};
+            var p2 = {x:480, y:250};
+            var dx = p2.x - p1.x;
+            var dy = p2.y - p1.y;
+            var distance = Math.sqrt(dx*dx + dy*dy);
+            var moves = distance/speed;
+            var xunits = (p2.x - p1.x)/moves;
+            var yunits = (p2.y - p1.y)/moves;
+            var ball = {x:p1.x, y:p1.y};
+            var points = new Array();
+            var pointImage = new Image();
+            pointImage.src = "../../resources/canvas/img/point.png";
+
+            setInterval(drawScreen, 33);
+
+            function drawScreen() {
+                context.fillStyle = '#EEEEEE';
+                context.fillRect(0, 0, theCanvas.width, theCanvas.height);
+
+                context.strokeStyle = '#000000';
+                context.strokeRect(1, 1, theCanvas.width-2, theCanvas.height-2);
+
+                if ( moves > 0 ) { // 거리 5 만큼 moves수만큼 이동.
+                    moves--;
+                    ball.x += xunits;
+                    ball.y += yunits;
+                }
+
+                points.push({x:ball.x, y:ball.y});
+                for ( var i = 0; i < points.length; i++ ) {
+                    context.drawImage(pointImage, points[i].x, points[i].y, 1, 1);
+                }
+
+                context.fillStyle = '#000000';
+                context.beginPath();
+                context.arc(ball.x, ball.y, 15, 0, Math.PI*2, true); // x, y, radius, startAngle, endAngle, anticlockwise
+                context.closePath();
+                context.fill();
+            }
+        }
+    </script>
+</head>
+<body onload="init();">
+    <div style="position: absolute; top: 50px; left: 50px;">
+        <canvas id="canvas" width="500" height="500">
+            Your browser does not support HTML5 Canvas.
+        </canvas>
+    </div>
+</body>
+</html>

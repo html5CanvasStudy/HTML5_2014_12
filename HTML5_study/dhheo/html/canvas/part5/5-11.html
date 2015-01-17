@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>part5-11</title>
+		<style type="text/css">
+			
+		</style>
+		<script type="text/javascript">
+			/*
+			* 4개의 제어점(control point)를 갖는 곡선을 3차 베지어 곡선, 3개의 제어점을 갖는 곡선을 2차 베지어 곡선이라 한다!!
+			* (a+b)³=(a³+b³)+3ab(a+b)
+			* (a-b)³=(a³-b³)-3ab(a-b)
+			* 베지어곡선 참고사이트 : http://eunchul.com/Algorithms/BezierCurves/BezierCurves.htm
+			* 조절점이 2개 공식 
+			* B(u) = P0 + u ( P1 - P0 )
+			* 조절점이 3개 공식 
+			* B(u) = P0 * ( 1 - u )^2 + P1 * 2 * u ( 1 - u ) + P2 u^2
+			* 조절점이 4개 공식 
+			* B(u) = P0 * ( 1 - u )^3 + P1 * 3 * u * ( 1 - u )^2 + P2 * 3 * u^2 * ( 1 - u ) + P3 * u^3
+			*/
+			function init() {
+				var p0 = {x:60, y:10};
+				var p1 = {x:70, y:200};
+				var p2 = {x:125, y:295};
+				var p3 = {x:350, y:350};
+				var ball = {x:0, y:0, speed:0.01, t:0};
+				var theCanvas = document.getElementById("canvas");
+				var context = theCanvas.getContext("2d");
+				var points = new Array();
+				
+				setInterval(drawScreen, 33);
+				
+				function drawScreen() {
+					context.fillStyle = '#EEEEEE';
+					context.fillRect(0, 0, theCanvas.width, theCanvas.height);
+					
+					context.strokeStyle = '#000000';
+					context.strokeRect(1, 1, theCanvas.width-2, theCanvas.height-2);
+					
+					var t = ball.t;
+					var cx = 3*(p1.x - p0.x);
+					var bx = 3*(p2.x - p1.x) - cx;
+					var ax = p3.x - p0.x - cx - bx;
+					var cy = 3*(p1.y - p0.y);
+					var by = 3*(p2.y - p1.y) - cy;
+					var ay = p3.y - p0.y - cy - by;
+					var xt = ax*(t*t*t) + bx*(t*t) + cx*t + p0.x;
+					var yt = ay*(t*t*t) + by*(t*t) + cy*t + p0.y;
+					
+					ball.t += ball.speed;
+					
+					if ( ball.t > 1 ) {
+						ball.t = 1;
+					}
+					
+					// 제어점을 그린다.
+					context.font = "10px sans";
+					context.fillStyle = "#FF0000";
+					context.beginPath();
+					context.arc(p0.x, p0.y, 8, 0, Math.PI*2, true);
+					context.closePath();
+					context.fill();
+					context.fillStyle = "#FFFFFF";
+					context.fillText("0", p0.x-2, p0.y+2);
+					
+					context.fillStyle = "#FF0000";
+					context.beginPath();
+					context.arc(p1.x, p1.y, 8, 0, Math.PI*2, true);
+					context.closePath();
+					context.fill();
+					context.fillStyle = "#FFFFFF";
+					context.fillText("1", p1.x-2, p1.y+2);
+					
+					context.fillStyle = "#FF0000";
+					context.beginPath();
+					context.arc(p2.x, p2.y, 8, 0, Math.PI*2, true);
+					context.closePath();
+					context.fill();
+					context.fillStyle = "#FFFFFF";
+					context.fillText("2", p2.x-2, p2.y+2);
+					
+					context.fillStyle = "#FF0000";
+					context.beginPath();
+					context.arc(p3.x, p3.y, 8, 0, Math.PI*2, true);
+					context.closePath();
+					context.fill();
+					context.fillStyle = "#FFFFFF";
+					context.fillText("3", p3.x-2, p3.y+2);
+					
+					context.fillStyle = "#000000";
+					context.beginPath();
+					context.arc(xt, yt, 5, 0, Math.PI*2, true);
+					context.closePath();
+					context.fill();
+					
+					for ( var i = 0; i < points.length; i++ ) {
+						context.beginPath();
+						context.arc(points[i].x, points[i].y, 1, 0, Math.PI*2, true);
+						context.closePath();
+						context.fill();
+					}
+					
+					points.push({x:xt, y:yt});
+				}
+			}
+		</script>
+	</head>
+	<body onload="init();">
+		<div style="position: absolute; top: 10px; left: 10px;">
+			<canvas id="canvas" width="500" height="400">
+				Your browser does not support HTML5 Canvas. //적용 안되는 브라우저에서 나옴.
+			</canvas>
+		</div>
+	</body>
+</html>
