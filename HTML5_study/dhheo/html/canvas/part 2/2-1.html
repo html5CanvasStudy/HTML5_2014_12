@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>HTML5</title>
+		<style type="text/css">
+			
+		</style>
+		<script type="text/javascript">
+			function init() {
+				var theCanvas = document.getElementById("canvas");
+				var context   = theCanvas.getContext("2d");
+
+				drawScreen(context, theCanvas);
+			}
+
+			function drawScreen(context, area) {
+				context.save();
+				context.fillStyle = "#aaaaaa";
+				context.fillRect(0, 0, area.getAttribute("width"), area.getAttribute("height"));
+				context.clearRect(1, 1, parseInt(area.getAttribute("width"))-2, parseInt(area.getAttribute("height"))-2);
+				context.fillStyle = '#000000';
+				context.font = '20px _sans';
+				context.textBaseline = 'top';
+				context.fillText("Canvas!", 0, 0);
+				context.restore();
+
+				context.beginPath();
+				context.strokeStyle = "black";
+				context.lineWith = 5;
+				// x, y, 반지름, startAngle, endAngle, 방향(false:시계방향, true:반전)
+				context.arc(25, 50, 20, (Math.PI/180)*0, (Math.PI/180)*360, false);
+				context.stroke();
+				context.closePath();
+				
+				context.beginPath();
+				context.lineWith = 5;
+				context.moveTo(30, 75);
+				context.lineTo(100, 200);
+				// x1, y1, x2, y2, 반지름  현재 위치와 (x1, y1)지점을 연결한 선과 (x1, y1)과 (x2, y2)를 연결한 접점에 호를 그리는데, (x1, y1) 지점과 현재 위치간의 선을 연결해준다.??
+				context.arcTo(250, 250, 100, 100, 20);
+				context.stroke();
+				context.closePath();
+				
+				context.beginPath();
+				context.lineWith = 5;
+				context.moveTo(100, 0);
+				// cpx, cpy, x, y  moveTo부터 (x,y)까지 선을 그리는데 (cpx, cpy) 좌표만큼의 조절점 즉, 총 3개의 조절점을 가진 베지어 곡선이 그려진다
+				context.quadraticCurveTo(200, 25, 100, 50);
+				context.stroke();
+				context.closePath();
+
+				context.beginPath();
+				context.strokeStyle = "black";
+				context.lineWith = 5;
+				context.moveTo(250, 0);
+				//cp1x, cp1y, cp2x, cp2y, x, y moveTo부터 (x,y)까지 선을 그리는데 (cp1x, cp1y) (cp2x, cp2y)좌표를 포함한 4개의 조절점을 가진 베지어 곡선이 그려진다.
+				context.bezierCurveTo(100, 125, 400, 175, 250, 300); 
+				context.stroke();
+				context.closePath();
+
+				// 예제 2-5 시작 p73
+				// 사각형 그리기
+				context.fillRect(350, 10, 200, 200);
+				context.save();
+				context.beginPath();
+
+				// 350,10을 시작점으로 하는 가로, 세로 50인 사각형 영역을 선택
+				context.rect(350, 10, 50, 50);//rect이외에 arc를 사용하여 영역을 정해도 된다.
+				context.clip();
+
+				//빨간색 원
+				context.beginPath();
+				context.strokeStyle = "red";
+				context.lineWidth = 5;
+				context.arc(450, 110, 100, (Math.PI/180)*0, (Math.PI/180)*360, false);
+				context.stroke();
+				context.closePath();
+				context.restore();
+
+				context.save(); // wrap clip by save, restore
+				//전체 캔버스를 영역으로 선택한다.
+				context.beginPath();
+				context.rect(350, 10, 200, 200);
+				context.clip();
+
+				//파란색 원
+				context.beginPath();
+				context.strokeStyle = "blue";
+				context.lineWidth = 5;
+				context.arc(450, 100, 50, (Math.PI/180)*0, (Math.PI/180)*360, false);
+				context.stroke();
+				context.closePath();
+				// 예제 2-5 끝.
+
+				context.restore();
+
+				// 예제 2-6 시작 p76
+				// 사각형그리기
+				context.save();
+				context.fillStyle = "black";
+				context.fillRect(600, 10, 200, 200);
+
+				// globalCompositeOperation 값은 그대로 둔다. 빨간색 사각형
+				context.fillStyle = "red";
+				context.fillRect(590, 1, 50, 50);
+
+				// source-over로 설정
+				context.globalCompositeOperation = "source-over";
+
+				// 옆에 빨간색 사각형
+				context.fillRect(650, 1, 50, 50);
+
+				
+				// destination-over으로 설정
+				context.globalCompositeOperation = "destination-over";//맨 아래로 들어감
+				context.fillRect(590, 60, 50, 50);
+
+				// globalAlpha 설정
+				context.globalAlpha = 0.5;
+
+				// source-atop 설정
+				context.globalCompositeOperation = "source-atop";
+				context.fillRect(650, 60, 50, 50);
+				context.restore();
+
+				// 예제 2-7
+				// 사각형을 먼저 그리면 안됨! 이유는 모르지만 중심점이 맞지 않아 벽에 붙음!
+				context.save();
+				context.setTransform(1, 0, 0, 1, 0, 0);
+				context.rotate(45*Math.PI/180);
+				context.fillRect(100, 100, 50, 50);
+				context.restore();
+
+				// 예제 2-9
+				// 검은색 사각형
+				context.fillStyle = "black";
+				context.fillRect(70, 20, 25, 25);
+
+				// 빨간색 사각형
+				context.save();
+				context.setTransform(1, 0, 0, 1, 0, 0);
+				var angleInRadians = 45*Math.PI/180;
+				var x = 100;
+				var y = 100;
+				var width = 50;
+				var height = 50;
+				context.translate(x+(0.5*width), y+(0.5*height));
+				context.rotate(angleInRadians);
+				context.fillStyle = "red";
+				context.fillRect(-0.5*width, -0.5*height, width, height);
+				context.restore();
+
+				// 예제 2-10
+				// 빨간색 사각형
+				context.save();
+				repeat(context, 45, 20);
+				repeat(context, 75, 70);
+				repeat(context, 90, 120);
+				repeat(context, 120, 170);
+				context.restore();
+
+				// 예제 2-11
+				context.save();
+				context.setTransform(1, 0, 0, 1, 0, 0);
+				var x = 50;
+				var y = 350;
+				var width = 50;
+				var height = 50;
+				context.translate(x+(0.5*width), y+(0.5*height));
+				context.scale(2, 2);
+				//context.rotate(45*Math.PI/180);
+				context.fillStyle = "red";
+				context.fillRect(-0.5*width, -0.5*height, width, height);
+				context.restore();
+
+				// 예제 2-14
+				context.save();
+				// 수평 그레디언트 값은 0
+				var gr = context.createLinearGradient(200, 320, 300, 320); // 왼쪽 상단의 x, y 오른쪽 하단의 x, y
+
+				// 색상 정지점 추가
+				gr.addColorStop(0, "rgb(255, 0, 0)");
+				gr.addColorStop(0.5, "rgb(0, 255, 0)");
+				gr.addColorStop(1, "rgb(255, 0, 0)");
+
+				// fillStyle 그레디언트 설정
+				context.fillStyle = gr;
+				context.fillRect(200, 320, 100, 100);
+				context.fillRect(200, 420, 50, 100);
+				context.fillRect(200, 520, 200, 100);
+
+				context.strokeRect(410, 320, 100, 100);
+				context.strokeRect(410, 420, 50, 100);
+				context.strokeRect(410, 520, 200, 100);
+				context.restore();
+			}
+
+			function repeat(ctx, degree, xAxis) {
+				ctx.setTransform(1, 0, 0, 1, 0, 0);
+				var angleInRadians = degree*Math.PI/180;
+				var x = xAxis;
+				var y = 250;
+				var width = 40;
+				var height = 40;
+				ctx.translate(x+(0.5*width), y+(0.5*height));
+				ctx.rotate(angleInRadians);
+				ctx.fillStyle = "blue";
+				ctx.fillRect(-0.5*width, -0.5*height, width, height);
+			}
+		</script>
+	</head>
+	<body onload="init();">
+		<div style="position: absolute; top: 50px; left: 50px;">
+			<canvas id="canvas" width="1000" height="700">
+				Your browser does not support HTML5 Canvas.
+			</canvas>
+		</div>
+	</body>
+</html>

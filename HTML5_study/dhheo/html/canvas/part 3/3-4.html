@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>CH3EX1: Text Arranger Version 2.0</title>
+		<style type="text/css">
+			
+		</style>
+		<script type="text/javascript" src="../../resources/canvas/js/jscolor.js"></script>
+		<script type="text/javascript">
+			/*
+				3-5
+				1. context.measureText(msg) : msg의 width를 구한다
+				2. context.createPattern(img, repetition)
+				   - repetition : repeat(x,y 전부), repeat-x(x), repeat-y(y)
+				3. context.createLinearGradient(x0, y0, x1, y1)
+				   - (x0, y0) 부터 (x1, y1) 까지 변화.(addColorStop의 순서대로)
+				4. context.createRadialGradient(x0, y0, radius0, x1, y1, radius1)
+				   - 첫번째원부터 두번째 원까지 변화.(addColorStop의 순서대로)
+				5. toDataURL(type) 실제로는 MIME types 된다는데 두개밖에 안되는거같다 =_=a
+				   - type : image/png(default), image/jpeg
+				   
+				   cf) image/jpeg
+				   The second argument, if it is a number in the range 0.0 to 1.0 inclusive, must be treated as the desired quality level. If it is not a number or is outside that range, the user agent must use its default value, as if the argument had been omitted.
+			*/
+			function init() {
+				var textAlpha 	  = 1;
+				var shadowX 	  = 1;
+				var shadowY 	  = 1;
+				var shadowBlur 	  = 1;
+				var height		  = 400; // 추가추가
+				var width		  = 500;// 추가추가
+				var fontSize 	  = "50";
+				var fillOrStroke  = "fill";
+				var fontFace 	  = "serif";
+				var textBaseline  = "middle";
+				var textAlign 	  = "center";
+				var fontWeight 	  = "normal";
+				var fontStyle 	  = "normal";
+				var textFillColor = "#ff0000";
+				var shadowColor   = "#707070";
+				var textFillColor2= "#000000"; // 추가추가
+				var fillType	  = "colorFill"; // 추가추가
+				var message 	  = "your text";
+				var theCanvas 	  = document.getElementById("canvas");
+				var textBox 	  = document.getElementById("textBox");
+				var shadow_x 	  = document.getElementById("shadowX");
+				var shadow_y 	  = document.getElementById("shadowY");
+				var textSize 	  = document.getElementById("textSize");
+				var textFont 	  = document.getElementById("textFont");
+				var fillTyp		  = document.getElementById("fillType");
+				var textAlig 	  = document.getElementById("textAlign");
+				var globalAlpha	  = document.getElementById("textAlpha");
+				var fontStyl 	  = document.getElementById("fontStyle");
+				var fonWeight 	  = document.getElementById("fontWeight");
+				var shadowBlr	  = document.getElementById("shadowBlur");
+				var shadowClr	  = document.getElementById("shadowColor");
+				var canvasWidth	  = document.getElementById("canvasWidth"); // 추가추가
+				var canvasHeight  = document.getElementById("canvasHeight");// 추가추가
+				var textBasline   = document.getElementById("textBaseline");
+				var fillStroke 	  = document.getElementById("fillOrStroke");
+				var textFillClr   = document.getElementById("textFillColor");
+				var textFillClr2  = document.getElementById("textFillColor2"); // 추가추가
+				var createImgData = document.getElementById("createImageData");// 추가추가
+				var context		  = theCanvas.getContext("2d");
+				var pattern 	  = new Image(); // 추가추가
+				pattern.src  = "../../resources/canvas/img/snow.png"; // 추가추가
+				
+				textBox.addEventListener("keyup", textBoxChanged, false);
+				shadow_x.addEventListener("change", shadowXChanged, false);
+				shadow_y.addEventListener("change", shadowYChanged, false);
+				fillTyp.addEventListener("change", fillTypeChanged, false); // 추가추가
+				textSize.addEventListener("change", textSizeChanged, false);
+				textFont.addEventListener("change", textFontChanged, false);
+				textAlig.addEventListener("change", textAlignChanged, false);
+				fontStyl.addEventListener("change", fontStyleChanged, false);
+				fonWeight.addEventListener("change", fontWeightChanged, false);
+				shadowBlr.addEventListener("change", shadowBlurChanged, false);
+				shadowClr.addEventListener("change", shadowColorChanged, false); 
+				globalAlpha.addEventListener("change", textAlphaChanged, false);
+				fillStroke.addEventListener("change", fillOrStrokeChanged, false);
+				canvasWidth.addEventListener("change", canvasWidthChanged, false); // 추가추가
+				textBasline.addEventListener("change", textBaselineChanged, false);
+				canvasHeight.addEventListener("change", canvasHeightChanged, false);// 추가추가
+				textFillClr.addEventListener("change", textFillColorChanged, false);
+				textFillClr2.addEventListener("change", textFillColor2Changed, false); // 추가추가
+				createImgData.addEventListener("click", createImageDataPressed, false);// 추가추가
+				
+				drawScreen();
+				
+				function textBoxChanged(e) {
+					message = e.target.value;
+					drawScreen();
+				}
+				function textSizeChanged(e) {
+					fontSize = e.target.value;
+					drawScreen();
+				}
+				function textFontChanged(e) {
+					fontFace = e.target.value;
+					drawScreen();
+				}
+				function textAlignChanged(e) {
+					textAlign = e.target.value;
+					drawScreen();
+				}
+				function fontStyleChanged(e) {
+					fontWeight="";
+					fontStyle = e.target.value;
+					drawScreen();
+				}
+				function fontWeightChanged(e) {
+					fontWeight = e.target.value;
+					drawScreen();
+				}
+				function textBaselineChanged(e) {
+					textBaseline = e.target.value;
+					drawScreen();
+				}
+				function fillOrStrokeChanged(e) {
+					fillOrStroke = e.target.value;
+					drawScreen();
+				}
+				function textFillColorChanged(e) {
+					textFillColor = "#"+e.target.value;
+					drawScreen();
+				}
+				function textAlphaChanged(e) {
+					textAlpha = e.target.value;
+					drawScreen();
+				}
+				function shadowXChanged(e) {
+					shadowX = e.target.value;
+					drawScreen();
+				}
+				function shadowYChanged(e) {
+					shadowY = e.target.value;
+					drawScreen();
+				}
+				function shadowBlurChanged(e) {
+					shadowBlur = e.target.value;
+					drawScreen();
+				}
+				function shadowColorChanged(e) {
+					shadowColor = "#"+e.target.value;
+					drawScreen();
+				}
+				
+				/* 추가추가 */
+				function textFillColor2Changed(e) {
+					textFillColor2 = "#"+e.target.value;
+					drawScreen();
+				}
+				function fillTypeChanged(e) {
+					fillType = e.target.value;
+					drawScreen();
+				}
+				function canvasWidthChanged(e) {
+					width = e.target.value;
+					drawScreen();
+				}
+				function canvasHeightChanged(e) {
+					height = e.target.value;
+					drawScreen();
+				}
+				function createImageDataPressed(e) {
+					var imageDataDisplay = document.getElementById("imageDataDisplay");
+					imageDataDisplay.value = theCanvas.toDataURL("image/jpeg", 0.1); // base64
+					window.open(imageDataDisplay.value, "canvasImage", "left=0, top=0, width=" + theCanvas.width + ", height=" + theCanvas.height + ", toolbar=0, resizable=0");
+				}
+				
+				function drawScreen() {
+					context.save();
+					theCanvas.width = width;
+					theCanvas.height = height;
+					// 배경
+					context.fillStyle = "#ffffaa";
+					context.fillRect(0, 0, theCanvas.width, theCanvas.height);
+					// 사각형 박스
+					context.strokeStyle = "#000000";
+					context.strokeRect(5, 5, theCanvas.width-10, theCanvas.height-10);
+					// 문자열
+					context.textBaseline 	= textBaseline;
+					context.textAlign 	 	= textAlign;
+					context.font 			= fontWeight + " " + fontStyle + " " + fontSize + "px " + fontFace;
+					context.globalAlpha		= textAlpha;
+					context.shadowColor		= shadowColor;
+					context.shadowOffsetX	= shadowX;
+					context.shadowOffsetY	= shadowY;
+					context.shadowBlur		= shadowBlur;
+					
+					var xPosition = (theCanvas.width/2);
+					var yPosition = (theCanvas.height/2);
+					
+					/* 추가추가 */
+					var metrics	  = context.measureText(message);
+					var textWidth = metrics.width;
+					
+					var tempColor;
+					if ( fillType == "colorFill" ) {
+						tempColor = textFillColor;
+					} else if ( fillType == "linearGradient" ) {
+						var gradient = context.createLinearGradient(xPosition-(textWidth/2), yPosition, xPosition-(textWidth/2) + textWidth, yPosition);
+						gradient.addColorStop(0, textFillColor);
+						gradient.addColorStop(0.6, textFillColor2);
+						tempColor = gradient;
+					} else if ( fillType == "radialGradient" ) {
+						var gradient = context.createRadialGradient(xPosition, yPosition, fontSize, xPosition, yPosition, 1);
+						gradient.addColorStop(0, textFillColor);
+						gradient.addColorStop(0.6, textFillColor2);
+						tempColor = gradient;
+					} else if ( fillType == "pattern" ) {
+						tempColor = context.createPattern(pattern, "repeat");
+					} else {
+						tempColor = textFillColor;
+					}/* 추가추가 */
+					
+					switch(fillOrStroke) {
+						case "fill":
+							context.fillStyle = tempColor;
+							context.fillText(message, xPosition, yPosition);
+							break;
+						case "stroke":
+							context.strokeStyle = tempColor;
+							context.strokeText(message, xPosition, yPosition);
+							break;
+						case "both":
+							context.fillStyle = tempColor;
+							context.fillText(message, xPosition, yPosition);
+							context.strokeStyle = "#000000";
+							context.strokeText(message, xPosition, yPosition);
+							break;
+					}
+					context.restore();
+				}
+			}
+		</script>
+	</head>
+	<body onload="init();">
+		<div style="position: absolute; top: 10px; left: 10px;">
+			<canvas id="canvas" width="500" height="400">
+				Your browser does not support HTML5 Canvas. //적용 안되는 브라우저에서 나옴.
+			</canvas>
+
+			<form>
+				Text : <input id="textBox" placeholder="your text" />
+				<br>
+
+				Fill Or Stroke :
+				<select id="fillOrStroke">
+					<option value="fill">fill</option>
+					<option value="stroke">stroke</option>
+					<option value="both">both</option>
+				</select>
+				<br>
+				
+				Text Font :
+				<select id="textFont">
+					<option value="serif">serif</option>
+					<option value="sans-serif">sans-serif</option>
+					<option value="cursive">cursive</option>
+					<option value="fantasy">fantasy</option>
+					<option value="monospace">monospace</option>
+				</select>
+				<br>
+				
+				Text Size : <input type="range" id="textSize" min="0" max="300" step="1" value="50" />
+				<br>
+				
+				Text Color : <input class="color" id="textFillColor" value="FF0000" />
+				<br>
+
+				Font Weight :
+				<select id="fontWeight">
+					<option value="normal">normal</option>
+					<option value="bold">bold</option>
+					<option value="bolder">bolder</option>
+					<option value="lighter">lighter</option>
+				</select>
+				<br>
+
+				Font Style :
+				<select id="fontStyle">
+					<option value="normal">normal</option>
+					<option value="italic">italic</option>
+					<option value="oblique">oblique</option>
+				</select>
+				<br>
+
+				Text Baseline :
+				<select id="textBaseline">
+					<option value="middle">middle</option>
+					<option value="top">top</option>
+					<option value="hanging">hanging</option>
+					<option value="alphabetic">alphabetic</option>
+					<option value="ideographic">ideographic</option>
+					<option value="bottom">bottom</option>
+				</select>
+				<br>
+
+				Text Align :
+				<select id="textAlign">
+					<option value="center">center</option>
+					<option value="start">start</option>
+					<option value="end">end</option>
+					<option value="left">left</option>
+					<option value="right">right</option>
+				</select>
+				<br>
+
+				<!-- 추가 -->
+				Alpha : <input type="range" id="textAlpha" min="0.0" max="1.0" step="0.01" value="1.0" />
+				<br>
+
+				Shadow X : <input type="range" id="shadowX" min="-100" max="100" step="1" value="1" />
+				<br>
+
+				Shadow Y : <input type="range" id="shadowY" min="-100" max="100" step="1" value="1" />
+				<br>
+
+				Shadow Blur : <input type="range" id="shadowBlur" min="1" max="100" step="1" value="1" />
+				<br>
+
+				Shadow Color : <input class="color" id="shadowColor" value="707070" />
+				<br>
+				
+				<!-- 추가 -->
+				Fill Type :
+				<select id="fillType">
+					<option value="colorFill">Color Fill</option>
+					<option value="linearGradient">Linear Gradient</option>
+					<option value="radialGradient">Radial Gradient</option>
+					<option value="pattern">pattern</option>
+				</select>
+				<br>
+				
+				Text Color 2 : <input class="color" id="textFillColor2" value="000000" />
+				<br>
+				
+				canvasStyleWidth : <input type="range" id="canvasWidth" min="0" max="1000" step="1" value="500" />
+				<br>
+				
+				canvasStyleHeight : <input type="range" id="canvasHeight" min="0" max="1000" step="1" value="400" />
+				<br>
+				
+				<input type="button" id="createImageData" value="Create Image Data" />
+				<br>
+				
+				<textarea id="imageDataDisplay" rows=10 cols=30></textarea>
+			</form>
+		</div>
+	</body>
+</html>

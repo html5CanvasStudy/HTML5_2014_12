@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Title Here!!</title>
+<script type="text/javascript">
+	var photo = new Image();
+
+	photo.addEventListener('load', eventShipLoaded, false);
+	photo.src = "images/butterfly.jpg";
+
+	var windowWidth = 500;
+	var windowHeight = 500;
+
+	var windowX = 0;
+	var windowY = 0;
+
+	function eventShipLoaded(){
+		canvasApp();
+	}
+
+	function canvasApp(){
+		var theCanvas = document.getElementById("canvas");
+		var context = theCanvas.getContext("2d");
+
+		startUp();
+
+		function drawScreen(){
+			context.drawImage(photo, windowX, windowY, windowWidth, windowHeight, 0, 0, windowWidth * .5, windowHeight * .5);
+
+			windowX += 10;
+
+			if(windowX > photo.width - windowWidth){
+				windowX = photo.width - windowWidth;
+			}
+		}
+
+		function startUp(){
+			setInterval(drawScreen, 100);
+		}
+	}
+</script>
+</head>
+
+<body>
+	<div style="position:absolute; top:50px; left:50px;">
+		<canvas id="canvas" width="500" height="500">
+
+		</canvas>
+	</div>
+</body>
+
+</html>
