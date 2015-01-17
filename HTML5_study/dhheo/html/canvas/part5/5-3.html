@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>part5-3</title>
+    <style type="text/css">
+
+    </style>
+    <script type="text/javascript">
+       /*
+        * =====벡터에 따른 움직임====
+        * 벡터의 크기 : 객체가 움직이는 속력
+        * 벡터의 방향 : 객체가 움직일 때의 각도
+        * Math.cos, Math.sin
+        * 각도와 라디안의 상관관계 참조사이트 http://math.rice.edu/~pcmi/sphere/drg_txt.html
+        * 삼각함수 참조 사이트 : http://en.wikipedia.org/wiki/Trigonometric_functions
+        */
+        function init() {
+            var theCanvas = document.getElementById("canvas");
+            var context  = theCanvas.getContext("2d");
+            var speed = 5;
+            var p1 = {x:20, y:20};
+            var angle = 45;
+            var radians = angle*Math.PI/180;
+            var xunits = Math.cos(radians)*speed;
+            var yunits = Math.sin(radians)*speed;
+            var ball = {x:p1.x, y:p1.y};
+            var points = new Array();
+            var pointImage = new Image();
+            pointImage.src = "../../resources/canvas/img/point.png";
+
+            setInterval(drawScreen, 33);
+
+            function drawScreen() {
+                context.fillStyle = '#EEEEEE';
+                context.fillRect(0, 0, theCanvas.width, theCanvas.height);
+
+                context.strokeStyle = '#000000';
+                context.strokeRect(1, 1, theCanvas.width-2, theCanvas.height-2);
+
+                ball.x += xunits;
+                ball.y += yunits;
+
+                points.push({x:ball.x, y:ball.y});
+                for ( var i = 0; i < points.length; i++ ) {
+                    context.drawImage(pointImage, points[i].x, points[i].y, 1, 1);
+                }
+
+                context.fillStyle = '#000000';
+                context.beginPath();
+                context.arc(ball.x, ball.y, 15, 0, Math.PI*2, true); // x, y, radius, startAngle, endAngle, anticlockwise
+                context.closePath();
+                context.fill();
+
+                if ( ball.x >= 485 ) location.reload();
+            }
+        }
+    </script>
+</head>
+<body onload="init();">
+    <div style="position: absolute; top: 50px; left: 50px;">
+        <canvas id="canvas" width="500" height="500">
+            Your browser does not support HTML5 Canvas.
+        </canvas>
+    </div>
+</body>
+</html>

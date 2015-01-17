@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>part5-9</title>
+		<style type="text/css">
+			
+		</style>
+		<script type="text/javascript">
+			function init() {
+				var radius = 100;
+				var circle = {centerX:250, centerY:250, radius:125, angle:0};
+				var ball = {x:0, y:0, speed:0.1};
+				var theCanvas = document.getElementById("canvas");
+				var context = theCanvas.getContext("2d");
+				var points = new Array();
+				setInterval(drawScreen, 33);
+				
+				function drawScreen() {
+					context.fillStyle = '#EEEEEE';
+					context.fillRect(0, 0, theCanvas.width, theCanvas.height);
+					
+					context.strokeStyle = '#000000';
+					context.strokeRect(1, 1, theCanvas.width-2, theCanvas.height-2);
+					
+					// angle값이 커지면 cos값은 작아지고 sin값은 커진다. 
+					ball.x = circle.centerX + Math.cos(circle.angle)*circle.radius;
+					ball.y = circle.centerY + Math.sin(circle.angle)*circle.radius;
+					
+					circle.angle += ball.speed; // 각으로 따지면 5.7도씩 늘어남 
+					
+					context.fillStyle = "#000000";
+					context.beginPath();
+					context.arc(ball.x, ball.y, 15, 0, Math.PI*2, true);
+					context.closePath();
+					context.fill();
+					
+					for ( var i = 0; i < points.length; i++ ) {
+						context.beginPath();
+						context.arc(points[i].x, points[i].y, 1, 0, Math.PI*2, true);
+						context.closePath();
+						context.fill();
+					}
+					
+					points.push({x:ball.x, y:ball.y});
+				}
+			}
+		</script>
+	</head>
+	<body onload="init();">
+		<div style="position: absolute; top: 10px; left: 10px;">
+			<canvas id="canvas" width="500" height="400">
+				Your browser does not support HTML5 Canvas. //적용 안되는 브라우저에서 나옴.
+			</canvas>
+		</div>
+	</body>
+</html>
