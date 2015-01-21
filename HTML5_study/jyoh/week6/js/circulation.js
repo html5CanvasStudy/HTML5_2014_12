@@ -23,7 +23,8 @@ function executeCanvas(){
 		context.strokeStyle = '#000000';
 		context.strokeRect(1, 1, canvas.width - 2, canvas.height - 2);
 
-		drawBall();
+		//drawBall();
+		drawSpiralBall();
 	}
 
 	//define a ball
@@ -34,16 +35,38 @@ function executeCanvas(){
 
 
 	function drawBall(){
+		var tempBall = {};
 		ball.x = circle.centerX + Math.cos(circle.angle) * circle.radius;
 		ball.y = circle.centerY + Math.sin(circle.angle) * circle.radius;
 
 		circle.angle += ball.speed;
 
-		context.fillStyle = '#55FF44';
+
+		for(var i = 0; i < trace.length; i++) {
+			context.fillStyle = '#000000';
+			context.beginPath();
+				context.arc(trace[i].x, trace[i].y, 1, 0, Math.PI * 2, true);
+			context.closePath();
+			context.fill();
+		}
+
+		context.fillStyle = '#55FF44';		
+
 		context.beginPath();
 			context.arc(ball.x, ball.y, 15, 0, Math.PI * 2, true);
 		context.closePath();
+
+		tempBall.x = ball.x;
+		tempBall.y = ball.y;
+		trace.push(tempBall);
 		context.fill();
+	}
+
+	var radiusInc = 1;
+
+	function drawSpiralBall() {
+		circle.radius += radiusInc;
+		drawBall();
 	}
 
 
