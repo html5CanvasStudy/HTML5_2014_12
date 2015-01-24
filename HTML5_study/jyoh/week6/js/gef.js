@@ -18,6 +18,7 @@ function executeCanvas(){
 	var speed = 6;
 	var gravity = .1;
 	var friction = 0.008;
+	//var friction = 0;
 	var elasticity = .5;
 	var angle = 285;
 	var radians = angle * Math.PI/180;
