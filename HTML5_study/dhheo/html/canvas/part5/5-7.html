@@ -27,6 +27,11 @@
         * Math.atan(t),Math.atan2(dy, dx)는 rad값을 나타내준다. 즉 dx,dy의 각의 rad값.
         * 반발계수란 충돌 -(충돌후의 속도)/(충돌전의 속도) --- (이미지참조)
         * 반발계수가 1인 경우 탄성충돌이라 하며 이때 두 물체의 충돌 후 속도
+        *
+        * 운동량보존의법칙 속도 참조 사이트
+        * http://blog.hansune.com/106
+        * http://egloos.zum.com/hhugs/v/3506086
+        * 삼각함수 참조사이트 : http://blog.naver.com/ujin996/220199488640
         */
         function init() {
             var theCanvas = document.getElementById("canvas");
@@ -193,7 +198,7 @@
                 var final_velocityy_1 = velocityy_1; // 탄성계수 적용을 하지 않음.
                 var final_velocityy_2 = velocityy_2;
 
-                ball1.velocityx = Math.cos(collisionAngle)*final_velocityx_1+Math.cos(collisionAngle+Math.PI/2)*final_velocityy_1;
+                ball1.velocityx = Math.cos(collisionAngle)*final_velocityx_1+Math.cos(collisionAngle+Math.PI/2)*final_velocityy_1; // 180 ~ -180 이기 때문에 Math.PI/2만큼 더해준다.
                 ball1.velocityy = Math.sin(collisionAngle)*final_velocityx_1+Math.sin(collisionAngle+Math.PI/2)*final_velocityy_1;
                 ball2.velocityx = Math.cos(collisionAngle)*final_velocityx_2+Math.cos(collisionAngle+Math.PI/2)*final_velocityy_2;
                 ball2.velocityy = Math.sin(collisionAngle)*final_velocityx_2+Math.sin(collisionAngle+Math.PI/2)*final_velocityy_2;
