@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Title Here!!</title>
+<script type="text/javascript">
+	var counter = 0;
+	var tileSheet = new Image();
+
+	tileSheet.addEventListener('load', eventShipLoaded, false);
+	tileSheet.src = "images/ships.png";
+
+	function eventShipLoaded(){
+		canvasApp();
+	}
+
+	function canvasApp(){
+		var theCanvas = document.getElementById("canvas");
+		var context = theCanvas.getContext("2d");
+
+		startUp();
+
+		function drawScreen(){
+			context.fillStyle = "#aaaaaa";
+			context.fillRect(0, 0, 500, 500);
+
+			context.drawImage(tileSheet, 32 * counter, 0, 32, 32, 50, 50, 64, 64);
+
+			counter++;
+
+			if(counter > 1){
+				counter = 0;
+			}
+		}
+
+		function startUp(){
+			setInterval(drawScreen, 100);
+		}
+	}
+</script>
+</head>
+
+<body>
+	<div style="position:absolute; top:50px; left:50px;">
+		<canvas id="canvas" width="500" height="500">
+
+		</canvas>
+	</div>
+</body>
+
+</html>
