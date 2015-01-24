@@ -28,7 +28,7 @@ function executeCanvas(){
 	}
 
 	//define a ball
-	var ball = {x : 0, y : 0, speed : .01};
+	var ball = {x : 0, y : 0, speed : .1};
 
 	//var circle = {centerX : canvas.width / 2, centerY : canvas.height / 2, angle : 0, radius : 125};
 	var circle = {centerX : canvas.width / 2, centerY : canvas.height / 2, angle : 0, radius : 1};
@@ -63,7 +63,7 @@ function executeCanvas(){
 		context.fill();
 	}
 
-	var radiusInc = 1;
+	var radiusInc = .1;
 
 	function drawSpiralBall() {
 		circle.radius += radiusInc;

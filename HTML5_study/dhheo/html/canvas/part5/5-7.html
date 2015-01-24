@@ -71,7 +71,7 @@
                 balls.push(tempBall);
             }
 
-            var a =setInterval(drawScreen, 33);
+            setInterval(drawScreen, 33);
 
             function canStartHere(ball) {
                 for ( var i = 0; i < balls.length; i++ ) {
@@ -187,32 +187,12 @@
                 var direction2 = Math.atan2(ball2.velocityy, ball2.velocityx); // ball2 rad
 
                 // 왜 원래 방향에서 충돌 방향을 빼는가!!!!
-                /*var velocityx_1 = speed1*Math.cos(direction1 - collisionAngle); // 튕겨나갈때의 ball1 velocity x
+                var velocityx_1 = speed1*Math.cos(direction1 - collisionAngle); // 튕겨나갈때의 ball1 velocity x
                 var velocityy_1 = speed1*Math.sin(direction1 - collisionAngle); // ball1 velocity y
                 var velocityx_2 = speed2*Math.cos(direction2 - collisionAngle); // ball2 velocity x
                 var velocityy_2 = speed2*Math.sin(direction2 - collisionAngle); // ball2 velocity y
 
                 // 충돌후 속도 (공식 참조)
-                var final_velocityx_1 = ((ball1.mass-ball2.mass)*velocityx_1+(ball2.mass+ball2.mass)*velocityx_2)/(ball1.mass+ball2.mass);
-                var final_velocityx_2 = ((ball1.mass+ball1.mass)*velocityx_1+(ball2.mass-ball1.mass)*velocityx_2)/(ball1.mass+ball2.mass);
-                var final_velocityy_1 = velocityy_1; // 탄성계수 적용을 하지 않음.
-                var final_velocityy_2 = velocityy_2;
-
-                ball1.velocityx = Math.cos(collisionAngle)*final_velocityx_1+Math.cos(collisionAngle+Math.PI/2)*final_velocityy_1; // 180 ~ -180 이기 때문에 Math.PI/2만큼 더해준다.
-                ball1.velocityy = Math.sin(collisionAngle)*final_velocityx_1+Math.sin(collisionAngle+Math.PI/2)*final_velocityy_1;
-                ball2.velocityx = Math.cos(collisionAngle)*final_velocityx_2+Math.cos(collisionAngle+Math.PI/2)*final_velocityy_2;
-                ball2.velocityy = Math.sin(collisionAngle)*final_velocityx_2+Math.sin(collisionAngle+Math.PI/2)*final_velocityy_2;*/
-
-                //vaxp
-                (ma-mb)/(ma+mb)*(vax*cosθ+vay*sinθ) +
-                (mb+mb)/(ma+mb)*(vbx*cosθ+vby*sinθ)
-                //vbxp
-                (ma+ma)/(ma+mb)*(vax*cosθ+vay*sinθ) +
-                (mb-ma)/(ma+mb)*(vbx*cosθ+vby*sinθ)
-
-                vayp는 vayp = vay*cosθ - vax*sinθ
-                vbyp은 vbyp = vby*cosθ - vbx*sinθ
-
                 var final_velocityx_1 = ((ball1.mass-ball2.mass)*velocityx_1+(ball2.mass+ball2.mass)*velocityx_2)/(ball1.mass+ball2.mass);
                 var final_velocityx_2 = ((ball1.mass+ball1.mass)*velocityx_1+(ball2.mass-ball1.mass)*velocityx_2)/(ball1.mass+ball2.mass);
                 var final_velocityy_1 = velocityy_1; // 탄성계수 적용을 하지 않음.
