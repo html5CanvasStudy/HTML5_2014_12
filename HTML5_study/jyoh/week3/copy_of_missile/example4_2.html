@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Title Here!!</title>
+<script type="text/javascript">
+	var spaceShip = new Image();
+
+	spaceShip.addEventListener('load', eventShipLoaded, false);
+	spaceShip.src = "images/airplane.png";
+
+	function eventShipLoaded(){
+		canvasApp();		
+	}
+
+	function canvasApp(){
+		var theCanvas = document.getElementById("canvas");
+		var context = theCanvas.getContext("2d");
+
+		drawScreen();
+
+		function drawScreen(){
+			context.fillStyle = "gray";
+			context.fillRect(0, 0, 64, 160);
+
+			placeShip(context, spaceShip, 0, 0);
+			placeShip(context, spaceShip, 0, 34, 32, 32);
+			placeShip(context, spaceShip, 0, 68, 64, 64);
+			placeShip(context, spaceShip, 0, 140, 16, 16);
+		}
+
+		function placeShip(ctx, obj, posX, posY, width, height){
+			if(typeof width == "undefined" && typeof height == "undefined"){
+				ctx.drawImage(obj, posX, posY);
+			}else{
+				ctx.drawImage(obj, posX, posY, width, height);
+			}
+		}
+	}
+</script>
+</head>
+
+<body>
+	<div style="position:absolute; top:50px; left:50px;">
+		<canvas id="canvas" width="500" height="500">
+
+		</canvas>
+	</div>
+</body>
+
+</html>
