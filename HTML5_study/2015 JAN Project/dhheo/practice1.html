@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>practice1</title>
+    <style type="text/css">
+
+    </style>
+    <script type="text/javascript">
+        var Alkanoid = function() {
+            var theCanvas = document.getElementById("canvas");
+            var context  = theCanvas.getContext("2d");
+            var angle_180 = 180;
+            var angle_360 = 360;
+            var canvas_background = '#000000';
+            var ball_color = '#ffffff';
+            var move_bar_width = 50;
+            var move_bar_height = 10
+            var ball_radius = 10;
+            var ball_angle = Math.floor(Math.random()*angle_180)+angle_180;
+            var ball_speed = 3;
+            var ball = {x : theCanvas.width/2-ball_radius, y : theCanvas.height-ball_radius-move_bar_height*2, prevx: 0, prevy: 0};
+            var block_colors = ['red', 'green', 'blue', 'yellow', 'gray', 'white'];
+            var block_border_color = 'black';
+            var block_border_width = 2;
+            var leftInitPosition = 50;
+            var topInitPosition = 50;
+            var widthByEachBlock = 50;
+            var heightByEachBlock = 20;
+            var blockRowCount = 5;
+            var interval_speed = 10;
+            var blockColumnCount = (theCanvas.width - (widthByEachBlock*2))/widthByEachBlock;
+            var arrayForBlock = new Array(blockRowCount);
+
+            for ( var i = 0; i < blockRowCount; i++ ) {
+                arrayForBlock[i] = new Array(blockColumnCount);
+                for ( var j = 0; j < blockColumnCount; j++ ) {
+                    var randomNum = parseInt(Math.random()*block_colors.length);
+                    var left = leftInitPosition*(j+1);
+                    var top = (i == 0 ? topInitPosition : topInitPosition+(heightByEachBlock*i));
+                    var tmpWidth = block_border_width*2;
+                    var block_color = block_colors[randomNum];
+
+                    context.fillStyle = block_color;
+                    context.fillRect(left+block_border_width, top+block_border_width, widthByEachBlock-tmpWidth, heightByEachBlock-tmpWidth);
+
+                    context.strokeStyle = block_border_color;
+                    context.strokeRect(left, top, widthByEachBlock, heightByEachBlock);
+
+                    var tmp = {left : left, top : top, color : block_color};
+                    arrayForBlock[i][j] = tmp;
+                }
+            }
+
+            drawScreen();
+
+            function drawScreen() {
+            	context.fillStyle = canvas_background;
+                context.fillRect(0, 0, theCanvas.width, theCanvas.height);
+
+                createBlock();
+                setInterval(drawBall, interval_speed);
+                //for ( var i = 0; i < 10; i++ ) drawBall();
+            }
+            
+            function drawBall() {
+            	moveBall();
+            	wallCheck();
+                //if ( ball.y < arrayForBlock[blockRowCount-1][blockColumnCount-1].top+(heightByEachBlock+ball_speed) )
+                blockCheck();
+            }
+            
+            function moveBall() {
+            	context.fillStyle = canvas_background;
+            	context.beginPath();
+            	context.arc(ball.x, ball.y, ball_radius+1, 0, Math.PI*2, true);
+            	context.closePath();
+            	context.fill();
+
+                ball.prevx = ball.x;
+                ball.prevy = ball.y;
+            	
+            	ball.x += Math.cos(ball_angle*Math.PI/angle_180)*ball_speed;
+            	ball.y += Math.sin(ball_angle*Math.PI/angle_180)*ball_speed;
+            	
+            	context.fillStyle = ball_color;
+            	context.beginPath();
+            	context.arc(ball.x, ball.y, ball_radius, 0, Math.PI*2, true);
+            	context.closePath();
+            	context.fill();
+            }
+            
+            function wallCheck() {
+            	if ( ball.x > theCanvas.width - ball_radius || ball.x < ball_radius ) {
+            		ball_angle = angle_180 - ball_angle;
+            	} else if ( ball.y > theCanvas.height - ball_radius || ball.y < ball_radius ) {
+            		ball_angle = angle_360 - ball_angle;
+            	}
+            }
+            
+            function blockCheck() {
+                var isAngle = false;
+            	for ( var i = 0; i < blockRowCount; i++ ) {
+            		for ( var j = 0; j < blockColumnCount; j++ ) {
+                        if ( arrayForBlock[i][j]['color'] == canvas_background ) continue;
+            			isAngle = ballBounce(arrayForBlock[i][j]);
+                        if ( isAngle ) {
+                            arrayForBlock[i][j]['color'] = canvas_background;
+                            createBlock();
+                            break;
+                        }
+            		}
+                    if ( isAngle ) break;
+            	}
+            }
+            
+            function ballBounce(block) {
+            	var isYaxis = ball.y > block.top - ball_radius && ball.y < block.top + heightByEachBlock + ball_radius;
+            	var isXaxis = ball.x > block.left - ball_radius && ball.x < block.left + widthByEachBlock + ball_radius;
+            	
+   				if ( isYaxis && isXaxis ) {
+                    ballBouncePosition(block);
+
+                    return true;
+   				}
+
+                return false;
+            }
+
+            function ballBouncePosition(block){ // 모서리 n,n일 때 버그있는것 같음ㅠ
+                var isAngleChange = false;
+                var changeAngle = ball_angle;
+                var leftBall = ball.x + ball_radius;
+                var rightBall = ball.x - ball_radius;
+                var topBall = ball.y + ball_radius;
+                var bottomBall = ball.y - ball_radius;
+
+                var leftVal = leftBall - block.left;
+                var rightVal = block.left + widthByEachBlock - rightBall;
+                var topVal = topBall - block.top;
+                var bottomVal = block.top + heightByEachBlock - bottomBall;
+
+                var leftX = leftVal < block.left + widthByEachBlock - leftBall && leftVal <= ball_speed;
+                var rightX = rightVal < rightBall - block.left && rightVal <= ball_speed;
+                var topY = topVal < block.top + heightByEachBlock - topBall && topVal <= ball_speed;
+                var bottomY = bottomVal < bottomBall - block.top && bottomVal <= ball_speed;
+
+                if ( leftX || rightX ) {
+                    ball_angle = angle_180 - ball_angle;
+                    isAngleChange = true;
+                } else if ( topY || bottomY ) {
+                    ball_angle = angle_360 - ball_angle;
+                    isAngleChange = true;
+                }
+
+                if ( leftX && topY ) {
+                    angleCalculate(leftVal, topVal, isAngleChange, changeAngle);
+                } else if ( leftX && bottomY ) {
+                    angleCalculate(leftVal, bottomVal, isAngleChange, changeAngle);
+                } else if ( rightX && topY ) {
+                    angleCalculate(rightVal, topVal, isAngleChange, changeAngle);
+                } else if ( rightX && bottomY ) {
+                    angleCalculate(rightVal, bottomVal, isAngleChange, changeAngle);
+                }
+
+                moveBall();
+            }
+
+            function angleCalculate(val1, val2, isAngleChange, changeAngle) {
+                if ( val1 < val2 ) {
+                    angleChange(isAngleChange, changeAngle, angle_180);
+                } else {
+                    angleChange(isAngleChange, changeAngle, angle_360);
+                }
+            }
+
+            function angleChange(isAngleChange, changeAngle, angle) {
+                if ( isAngleChange ) {
+                    ball_angle = angle - changeAngle;
+                } else {
+                    ball_angle = angle - ball_angle;
+                }
+            }
+            
+            function createBlock() {
+                for ( var i = 0; i < arrayForBlock.length; i++ ) {
+                    for ( var j = 0; j < arrayForBlock[i].length; j++ ) {
+                        var left = arrayForBlock[i][j]['left'];
+                        var top = arrayForBlock[i][j]['top'];
+                        var block_color = arrayForBlock[i][j]['color'];
+                        var tmpWidth = block_border_width*2;
+
+                        context.fillStyle = block_color;
+                        context.fillRect(left+block_border_width, top+block_border_width, widthByEachBlock-tmpWidth, heightByEachBlock-tmpWidth);
+
+                        context.strokeStyle = block_border_color;
+                        context.strokeRect(left, top, widthByEachBlock, heightByEachBlock);
+                    }
+                }
+            }
+        }
+
+        window.onload = Alkanoid;
+    </script>
+</head>
+<body>
+    <div style="position: absolute; top: 50px; left: 50px;">
+        <canvas id="canvas" width="1000" height="400">
+            Your browser does not support HTML5 Canvas.
+        </canvas>
+    </div>
+</body>
+</html>
