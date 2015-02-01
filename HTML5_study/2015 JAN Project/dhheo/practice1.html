@@ -7,69 +7,77 @@
 
     </style>
     <script type="text/javascript">
-        var Alkanoid = function() {
+        function Alkanoid() {
             var theCanvas = document.getElementById("canvas");
-            var context  = theCanvas.getContext("2d");
+            var context = theCanvas.getContext("2d");
             var angle_180 = 180;
             var angle_360 = 360;
             var canvas_background = '#000000';
             var ball_color = '#ffffff';
-            var move_bar_width = 50;
-            var move_bar_height = 10
             var ball_radius = 10;
-            var ball_angle = Math.floor(Math.random()*angle_180)+angle_180;
+            var move_bar_width = 100;
+            var move_bar_height = 10;
+            var bar_move_speed = 20;
+            var bar_pos_w = theCanvas.width/2 - move_bar_width/2;
+            var bar_pos_h = theCanvas.height - ball_radius - move_bar_height + 1;
+            var prev_bar_pos_w = bar_pos_w;
+            var ball_angle_two = [Math.floor(Math.random()*50)+200, Math.floor(Math.random()*50)+290];
+            var ball_angle = ball_angle_two[Math.floor(Math.random()*2)];
             var ball_speed = 3;
-            var ball = {x : theCanvas.width/2-ball_radius, y : theCanvas.height-ball_radius-move_bar_height*2, prevx: 0, prevy: 0};
-            var block_colors = ['red', 'green', 'blue', 'yellow', 'gray', 'white'];
+            var ball = {x : theCanvas.width/2-ball_radius, y : theCanvas.height-ball_radius-move_bar_height*2-ball_speed, prevx: 0, prevy: 0};
+            var block_colors = ['red', 'green', 'blue', 'yellow', 'gray', 'white', canvas_background];
             var block_border_color = 'black';
             var block_border_width = 2;
             var leftInitPosition = 50;
             var topInitPosition = 50;
             var widthByEachBlock = 50;
             var heightByEachBlock = 20;
+            var interval_speed = 20;
             var blockRowCount = 5;
-            var interval_speed = 10;
             var blockColumnCount = (theCanvas.width - (widthByEachBlock*2))/widthByEachBlock;
             var arrayForBlock = new Array(blockRowCount);
+            var breakBlockCount = 0;
+            var allBlockCount = 0;
+            var interval;
 
-            for ( var i = 0; i < blockRowCount; i++ ) {
-                arrayForBlock[i] = new Array(blockColumnCount);
-                for ( var j = 0; j < blockColumnCount; j++ ) {
-                    var randomNum = parseInt(Math.random()*block_colors.length);
-                    var left = leftInitPosition*(j+1);
-                    var top = (i == 0 ? topInitPosition : topInitPosition+(heightByEachBlock*i));
-                    var tmpWidth = block_border_width*2;
-                    var block_color = block_colors[randomNum];
+            this.start = function() {
+                for ( var i = 0; i < blockRowCount; i++ ) {
+                    arrayForBlock[i] = new Array(blockColumnCount);
+                    for ( var j = 0; j < blockColumnCount; j++ ) {
+                        var randomNum = parseInt(Math.random()*block_colors.length);
+                        var left = leftInitPosition*(j+1);
+                        var top = (i == 0 ? topInitPosition : topInitPosition+(heightByEachBlock*i));
+                        var block_color = block_colors[randomNum];
 
-                    context.fillStyle = block_color;
-                    context.fillRect(left+block_border_width, top+block_border_width, widthByEachBlock-tmpWidth, heightByEachBlock-tmpWidth);
+                        if ( block_color != canvas_background ) allBlockCount++;
 
-                    context.strokeStyle = block_border_color;
-                    context.strokeRect(left, top, widthByEachBlock, heightByEachBlock);
-
-                    var tmp = {left : left, top : top, color : block_color};
-                    arrayForBlock[i][j] = tmp;
+                        var tmp = {left : left, top : top, color : block_color};
+                        arrayForBlock[i][j] = tmp;
+                    }
                 }
-            }
 
-            drawScreen();
+                drawScreen();
+            }
 
             function drawScreen() {
             	context.fillStyle = canvas_background;
                 context.fillRect(0, 0, theCanvas.width, theCanvas.height);
 
+                window.addEventListener('keydown', keydownEvent, false);
+
+                moveBar(prev_bar_pos_w, bar_pos_w);
                 createBlock();
-                setInterval(drawBall, interval_speed);
-                //for ( var i = 0; i < 10; i++ ) drawBall();
+                interval = setInterval(drawBall, interval_speed);
             }
             
             function drawBall() {
+                if ( allBlockCount == breakBlockCount ) gameClear();
+
             	moveBall();
-            	wallCheck();
-                //if ( ball.y < arrayForBlock[blockRowCount-1][blockColumnCount-1].top+(heightByEachBlock+ball_speed) )
+                if ( !barCheck() ) wallCheck();
                 blockCheck();
             }
-            
+
             function moveBall() {
             	context.fillStyle = canvas_background;
             	context.beginPath();
@@ -93,9 +101,20 @@
             function wallCheck() {
             	if ( ball.x > theCanvas.width - ball_radius || ball.x < ball_radius ) {
             		ball_angle = angle_180 - ball_angle;
-            	} else if ( ball.y > theCanvas.height - ball_radius || ball.y < ball_radius ) {
+            	} else if ( ball.y < ball_radius ) {
             		ball_angle = angle_360 - ball_angle;
-            	}
+            	} else if ( ball.y > bar_pos_h ) {
+                    gameOver();
+                }
+            }
+
+            function barCheck() {
+                if ( ball.x > bar_pos_w && ball.x < bar_pos_w + move_bar_width && ball.y + ball_radius + ball_speed > bar_pos_h ) {
+                    ball_angle = angle_360 - ball_angle;
+                    moveBall();
+                    return true;
+                }
+                return false;
             }
             
             function blockCheck() {
@@ -107,6 +126,7 @@
                         if ( isAngle ) {
                             arrayForBlock[i][j]['color'] = canvas_background;
                             createBlock();
+                            breakBlockCount++;
                             break;
                         }
             		}
@@ -169,8 +189,10 @@
             function angleCalculate(val1, val2, isAngleChange, changeAngle) {
                 if ( val1 < val2 ) {
                     angleChange(isAngleChange, changeAngle, angle_180);
-                } else {
+                } else if ( val1 > val2 ) {
                     angleChange(isAngleChange, changeAngle, angle_360);
+                } else {
+                    ball_angle = -ball_angle;
                 }
             }
 
@@ -198,14 +220,68 @@
                     }
                 }
             }
+
+            function clrInterval() {
+                window.removeEventListener('keydown', keydownEvent, false);
+                clearInterval(interval);
+            }
+
+            function gameOver() {
+                clrInterval();
+                drawText('Game Over');
+            }
+
+            function gameClear() {
+                clrInterval();
+                drawText('Game Clear');
+            }
+
+            function drawText(text) {
+                context.font = 'bold italic 30pt 나눔고딕';
+                context.textAlign = 'center';
+                context.fillStyle = 'white';
+                context.fillText(text, theCanvas.width/2, theCanvas.height/2);
+            }
+
+            function keydownEvent(e) {
+                var tmpBarPos = bar_pos_w;
+
+                if ( e.keyCode == 37 ) { // left
+                    bar_pos_w = bar_pos_w - bar_move_speed;
+                    if ( bar_pos_w < ball_speed ) {
+                        bar_pos_w = bar_pos_w + bar_move_speed;
+                        return;
+                    }
+                    moveBar(tmpBarPos, bar_pos_w);
+                } else if ( e.keyCode == 39 ) { // right
+                    bar_pos_w = bar_pos_w + bar_move_speed;
+                    if ( bar_pos_w + move_bar_width > theCanvas.width - ball_speed ) {
+                        bar_pos_w = bar_pos_w - bar_move_speed;
+                        return;
+                    }
+                    moveBar(tmpBarPos, bar_pos_w);
+                }
+            }
+
+            function moveBar(prev_bar_pos_w, bar_pos_w) {
+                context.fillStyle = canvas_background;
+                context.fillRect(prev_bar_pos_w, bar_pos_h, move_bar_width, move_bar_height);
+
+                context.fillStyle = ball_color;
+                context.fillRect(bar_pos_w, bar_pos_h, move_bar_width, move_bar_height);
+            }
         }
 
-        window.onload = Alkanoid;
+        window.onload = function() {
+            var alkanoid = new Alkanoid();
+            alkanoid.start();
+        }
+
     </script>
 </head>
 <body>
     <div style="position: absolute; top: 50px; left: 50px;">
-        <canvas id="canvas" width="1000" height="400">
+        <canvas id="canvas" width="500" height="400">
             Your browser does not support HTML5 Canvas.
         </canvas>
     </div>
