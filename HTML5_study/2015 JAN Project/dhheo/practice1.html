@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8" />
     <title>practice1</title>
-    <style type="text/css">
-
-    </style>
+    <script type="text/javascript" src="../../dhheo/html/resources/canvas/js/jscolor.js" ></script>
     <script type="text/javascript">
         function Alkanoid() {
             var theCanvas = document.getElementById("canvas");
             var context = theCanvas.getContext("2d");
+            var fontSize = 30;
             var angle_180 = 180;
             var angle_360 = 360;
             var canvas_background = '#000000';
             var ball_color = '#ffffff';
+            var bar_color = '#ffffff';
             var ball_radius = 10;
             var move_bar_width = 100;
             var move_bar_height = 10;
@@ -39,6 +39,9 @@
             var breakBlockCount = 0;
             var allBlockCount = 0;
             var interval;
+            var alkanoidImg = new Image();
+            alkanoidImg.addEventListener('load', alkanoidInit, false);
+            alkanoidImg.src = '../../dhheo/html/resources/canvas/img/alkanoid.png';
 
             this.start = function() {
                 for ( var i = 0; i < blockRowCount; i++ ) {
@@ -63,10 +66,13 @@
             	context.fillStyle = canvas_background;
                 context.fillRect(0, 0, theCanvas.width, theCanvas.height);
 
-                window.addEventListener('keydown', keydownEvent, false);
-
                 moveBar(prev_bar_pos_w, bar_pos_w);
                 createBlock();
+                gameInterval();
+            }
+
+            function gameInterval() {
+                window.addEventListener('keydown', keydownEvent, false);
                 interval = setInterval(drawBall, interval_speed);
             }
             
@@ -182,7 +188,12 @@
                 } else if ( rightX && bottomY ) {
                     angleCalculate(rightVal, bottomVal, isAngleChange, changeAngle);
                 }
-
+                /*var b_dy = widthByEachBlock/2;
+                var b_dx = heightByEachBlock/2;
+                var dy = ball.y-ball.prevy;
+                var dx = ball.y-ball.prevx;
+                console.log("ball Angle : ",Math.atan2(dy, dx)*180/Math.PI);
+                console.log("block Angle : ",Math.atan2(b_dy, b_dx)*180/Math.PI);*/
                 moveBall();
             }
 
@@ -237,10 +248,16 @@
             }
 
             function drawText(text) {
-                context.font = 'bold italic 30pt 나눔고딕';
+                context.font = 'bold italic '+fontSize+'pt 나눔고딕';
                 context.textAlign = 'center';
                 context.fillStyle = 'white';
                 context.fillText(text, theCanvas.width/2, theCanvas.height/2);
+            }
+
+            function clearText(text) {
+                var textWidth = context.measureText(text).width;
+                context.fillStyle = "black";
+                context.fillRect(theCanvas.width/2 - textWidth/2, theCanvas.height/2-fontSize-10, textWidth+10, fontSize+15);
             }
 
             function keydownEvent(e) {
@@ -267,23 +284,112 @@
                 context.fillStyle = canvas_background;
                 context.fillRect(prev_bar_pos_w, bar_pos_h, move_bar_width, move_bar_height);
 
-                context.fillStyle = ball_color;
+                context.fillStyle = bar_color;
                 context.fillRect(bar_pos_w, bar_pos_h, move_bar_width, move_bar_height);
+            }
+
+            function alkanoidInit() {
+                context.drawImage(alkanoidImg, 0, 0, theCanvas.width, theCanvas.height);
+            }
+
+            function isEmpty(obj) {
+                if ( obj != undefined && obj != null && obj != "" ) return false;
+                return true;
+            }
+
+            this.stop = function() {
+                clrInterval();
+                drawText("STOP");
+            }
+
+            this.resume = function() {
+                clearText("STOP");
+                gameInterval();
+            }
+
+            this.ballSize = function(ball_size) {
+                if ( !isEmpty(ball_size) ) {
+                    ball_radius = parseInt(ball_size);
+                    bar_pos_h = theCanvas.height - ball_radius - move_bar_height + 1;
+                    ball = {x : theCanvas.width/2-ball_radius, y : theCanvas.height-ball_radius-move_bar_height*2-ball_speed, prevx: 0, prevy: 0};
+                }
+            }
+
+            this.ballColor = function(ball_clr) {
+                var clr = '#'+ball_clr;
+                if ( !isEmpty(ball_clr) && clr != '#fff' && clr != '#ffffff' && clr != '#black') ball_color = clr;
+            }
+
+            this.ballSpeed = function(speed) {
+                if ( !isEmpty(speed) ) {
+                    ball_speed = speed;
+                    ball = {x : theCanvas.width/2-ball_radius, y : theCanvas.height-ball_radius-move_bar_height*2-ball_speed, prevx: 0, prevy: 0};
+                }
+            }
+
+            this.barColor = function(color) {
+                var clr = '#'+color;
+                if ( !isEmpty(color) && clr != '#fff' && clr != '#ffffff' && clr != '#black') bar_color = clr;
             }
         }
 
         window.onload = function() {
             var alkanoid = new Alkanoid();
-            alkanoid.start();
-        }
 
+            var start = returnObj("start");
+            var stop = returnObj("stop");
+            var resume = returnObj("resume");
+            var ballSet = returnObj("ballSetting");
+
+            start.addEventListener('click', gameStart, false);
+            stop.addEventListener('click', gameStop ,false);
+            resume.addEventListener('click', gameResume ,false);
+
+            function gameStart() {
+                alkanoid.ballSize(returnObj("ballSize").value);
+                alkanoid.ballColor(returnObj("ballColor").value);
+                alkanoid.ballSpeed(returnObj("ballSpeed").value);
+                alkanoid.barColor(returnObj("barColor").value);
+
+                alkanoid.start();
+                resume.style.display = 'none';
+                ballSet.style.display = 'none';
+                start.style.display = 'none';
+            }
+
+            function gameStop() {
+                alkanoid.stop();
+                resume.style.display = '';
+            }
+
+            function gameResume() {
+                alkanoid.resume();
+                resume.style.display = 'none';
+            }
+
+            function returnObj(id) {
+                return document.getElementById(id);
+            }
+        }
     </script>
 </head>
 <body>
     <div style="position: absolute; top: 50px; left: 50px;">
-        <canvas id="canvas" width="500" height="400">
+        <canvas id="canvas" width="500" height="600">
             Your browser does not support HTML5 Canvas.
         </canvas>
+
+        <div>
+            <input type="button" id="start" value="Game Start"/>
+            <input type="button" id="stop" value="Game Stop" />
+            <input type="button" id="resume" value="Game Resume" />
+        </div>
+        <div id="ballSetting">
+            ball Size : <input type="text" maxlength="1" id="ballSize" style="width:8px;"/>
+            ball Speed : <input type="text" maxlength="1" id="ballSpeed" style="width:8px;"/>
+            ball Color : <input class="color" value="ffffff" id="ballColor" style="width:45px;"/>
+            bar Color : <input class="color" value="ffffff" id="barColor" style="width:45px;"/>
+        </div>
     </div>
 </body>
 </html>
