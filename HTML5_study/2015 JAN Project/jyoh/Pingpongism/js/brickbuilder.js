@@ -26,10 +26,11 @@ StageBuilder.prototype.buildRandomBricks = function(brickStartX, brickStartY, to
 
 	//col 은 열 , row 는 행 
 
-	console.log(brickStartX + ', ' + brickStartY + ', ' + totalWidth + ', ' + totalHeight);
+	//console.log(brickStartX + ', ' + brickStartY + ', ' + totalWidth + ', ' + totalHeight);
 
 	if((totalWidth - brickStartX) < 0 || (totalHeight - brickStartY) < 0){
 		console.log('wrong parameter. please, check start point X, start point Y, max Width, max Height.');
+		return;
 	}
 
 	var maxColCnt = (totalWidth - brickStartX)/options.brickWidth;
@@ -37,8 +38,8 @@ StageBuilder.prototype.buildRandomBricks = function(brickStartX, brickStartY, to
 
 	//maxRowBricks 를 기준으로 랜덤하게 행마다 세로의 개수를 잡는다.
 	//가로로 가다가 이빨빠진 줄을 어떻게 구현할지
-	console.log('maximum rows >> ' + maxRowCnt);
-	console.log('maximum cols >> ' + maxColCnt);
+	//console.log('maximum rows >> ' + maxRowCnt);
+	//console.log('maximum cols >> ' + maxColCnt);
 
 	for(var i = 0; i < maxRowCnt; i++){
 
@@ -48,7 +49,7 @@ StageBuilder.prototype.buildRandomBricks = function(brickStartX, brickStartY, to
 
 		//현재 줄에 몇개의 블럭을 그릴 것인지 
 		var currentRowBlockCnt = getRand(maxColCnt, 1);
-		console.log('current row >> ' + i + ', I will draw ' + currentRowBlockCnt + ' columns in this row');
+		//console.log('current row >> ' + i + ', I will draw ' + currentRowBlockCnt + ' columns in this row');
 
 		while(drawCnt < currentRowBlockCnt){
 			if(curCol > maxColCnt) curCol = 0;
@@ -61,21 +62,29 @@ StageBuilder.prototype.buildRandomBricks = function(brickStartX, brickStartY, to
 			var result = getRand(2, 0) % 2;
 			var isEmpty = (result == 0) ? true : false;	
 
+			/* 150207
 			if(isEmpty){
 				tmpBrick.exist = false;
 			}else{
 				tmpBrick.color = '#' + getRandColor();
 				drawCnt++;
 			}
+			*/
+
+			curCol++;
+			if(isEmpty) continue;
+			tmpBrick.color = '#' + getRandColor();
+			drawCnt++;
+
 			this.bricks.push(tmpBrick);
 			if(drawCnt > currentRowBlockCnt) {
 				break;
-			}
-			curCol++;		
+			}		
 		}
 	}
 }
 
+//@deprecated
 StageBuilder.prototype.drawBricks = function(ctx){
 	if(ctx == null || typeof ctx == 'undefined'){
 		console.log('unexpected parameter >> ' + ctx);
@@ -84,6 +93,7 @@ StageBuilder.prototype.drawBricks = function(ctx){
 
 	for(var i = 0; i < this.bricks.length; i++){
 		var tmpBrick = this.bricks[i];
+		/* 150207
 		if(tmpBrick.exist){
 			ctx.fillStyle = tmpBrick.color;
 			ctx.fillRect(tmpBrick.x, tmpBrick.y, tmpBrick.width, tmpBrick.height);
@@ -93,6 +103,17 @@ StageBuilder.prototype.drawBricks = function(ctx){
 				ctx.strokeRect(tmpBrick.x + 1, tmpBrick.y + 1, tmpBrick.width - 2, tmpBrick.height - 2);
 			}
 		}
+		*/
+		if(!tmpBrick.exist) continue;
+
+		ctx.fillStyle = tmpBrick.color;
+		ctx.fillRect(tmpBrick.x, tmpBrick.y, tmpBrick.width, tmpBrick.height);
+		//테두리를 그려라 
+		if(this.hasBorder){
+			ctx.strokeStyle = this.borderColor;
+			ctx.strokeRect(tmpBrick.x + 1, tmpBrick.y + 1, tmpBrick.width - 2, tmpBrick.height - 2);
+		}
+				
 	}
 }
 

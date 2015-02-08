@@ -1,3 +1,4 @@
+
 var Ball = function(){
 	this.x = 0;
 	this.y = 0;
@@ -43,23 +44,6 @@ Ball.prototype.render = function(ctx){
 	ctx.fill();
 }
 
-//벽 충돌 체크
-Ball.prototype.collideWall = function(ctx){
-	var playGroundWidth = ctx.canvas.width;
-	var playGroundHeight = ctx.canvas.height;
-
-	//천장과 바닥
-	if(this.y + this.radius >= playGroundHeight || this.y - this.radius <= 0){
-		this.velocityY *= -1;
-	}
-
-	//좌우 
-	if(this.x + this.radius >= playGroundWidth || this.x - this.radius <= 0){
-		this.velocityX *= -1;
-	}
-}
-
-
 //=== 난수 생성과 색상.
 
 function getRand(max, min){
@@ -94,8 +78,10 @@ Ball.prototype.increaseSpeed = function(interval){
 }
 
 //최종적으로 실행을 위해 호출하게 될 부분
+/*
 Ball.prototype.run = function(ctx){
 		this.update();
 		this.collideWall(ctx);
 		this.render(ctx);
 }
+*/

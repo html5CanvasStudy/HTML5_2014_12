@@ -21,7 +21,7 @@ function playPingPong(){
 
 	/* ========================= 여기서는 랜덤으로 스테이지를 생성한다. ============================== */ 
 
-	//width/height/mass	
+	//width/height/mass	of brick
 	var opt = new Options(50, 20, 1);
 	var builder = new StageBuilder(true, null);
 	//st_point_x/st_point_y/tot_area_width/tot_area_height/options
@@ -40,12 +40,21 @@ function playPingPong(){
 	var myballRadius = 10;
 	myball.initialize(canvas.width/2, canvas.height - myballRadius - 2, myballRadius, 5, -5, 10);
 	//myball.setColor('random');
-
 	//가속도 처리에는 오류가 있음 02 05
 	//myball.increaseSpeed(.5);
 
-	function drawCanvas(){
+	/* ============================== 여기서는 발판을 생성 ===================================== */
+	var myPaddle = new paddle();
+	//x, y, width, weight, color
+	myPaddle.initialize(canvas.width/2, canvas.height - 50, 80, 20, '#FF0000');
+	console.log(myPaddle);
 
+
+	//* ============================ 게임을 전사적으로 관리할 객체 생성 ============================ */
+	var controller = new gameControl();
+	controller.ready(myball, blockArray, myPaddle);
+
+	function drawCanvas(){
 		//=== 배경 칠하기
 		context.fillStyle = '#8CBDED';
 		context.fillRect(0, 0, canvas.width, canvas.height);
@@ -54,50 +63,8 @@ function playPingPong(){
 		context.strokeStyle = '#FF50CF';
 		context.strokeRect(1, 1, canvas.width - 2, canvas.height - 2);
 
-		builder.drawBricks(context);
-		myball.run(context);
+		controller.run(context);
 	}
-
-	setInterval(drawCanvas, 50);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	//drawCanvas();
-
-	/* 시작 버튼
-
-	context.strokeStyle = '#96F56E';
-	context.fillStyle = '#96F56E';
-	//context.fillRect(canvas.width/2, canvas.height/2, 120, 30);
-	
-	context.beginPath();
-		context.moveTo(canvas.width/2, canvas.height/2 - 20);
-		context.lineTo(canvas.width/2 + 60, canvas.height/2 - 20);
-		context.quadraticCurveTo(canvas.width/2 + 70, canvas.height/2 - 20, canvas.width/2 + 70, canvas.height/2 - 10);
-		context.lineTo(canvas.width/2 + 70, canvas.height/2 + 10);
-		context.quadraticCurveTo(canvas.width/2 + 70 , canvas.height/2 + 20, canvas.width/2 + 60, canvas.height/2 + 20);
-		context.lineTo(canvas.width/2 - 110, canvas.height/2 - 20 + 40);
-		context.quadraticCurveTo(canvas.width/2 - 120, canvas.height/2 + 20, canvas.width/2 - 120, canvas.height/2 + 10);
-		context.lineTo(canvas.width/2 - 120, canvas.height/2 - 20 + 40 - 10 - 20);
-		context.quadraticCurveTo(canvas.width/2 - 120, canvas.height/2 - 20, canvas.width/2 - 110, canvas.height/2 - 20);
-		context.lineTo(canvas.width/2, canvas.height/2 - 20);
-		context.fill();
-		//context.stroke();
-	context.closePath();	
-	*/
+	setInterval(drawCanvas, 40);
+}
