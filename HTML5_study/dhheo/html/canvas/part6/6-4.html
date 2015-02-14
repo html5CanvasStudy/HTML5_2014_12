@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>part6-4</title>
+    <script type="text/javascript">
+        function init() {
+            var videoElement = document.getElementById("theVideo");
+            var widthtoHeightRatio = videoElement.videoWidth/videoElement.videoHeight;
+            var sizeElement = document.getElementById("videoSize");
+            sizeElement.value = videoElement.videoWidth;
+            sizeElement.addEventListener('change', videoSizeChanged, false);
+
+            function videoSizeChanged(e) {
+                var target = e.target;
+                videoElement.width = target.value;
+                videoElement.height = target.value/widthtoHeightRatio;
+            }
+        }
+    </script>
+</head>
+<body onload="init();">
+    <div>
+        <form>
+            Video Size : <input type="range" id="videoSize" min="80" max="1280" step="1" value="320"/>
+        </form>
+        <br>
+    </div>
+    <div>
+        <video autoplay loop controls id="theVideo">
+            <source src="../../resources/canvas/video/mov_bbb.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+            <source src="../../resources/canvas/video/mov_bbb.webm" type='video/webm; codecs="vp8, vorbis"'>
+            <source src="../../resources/canvas/video/mov_bbb.ogg" type='video/ogg; codecs="theora, vorbis"'>
+        </video>
+    </div>
+</body>
+</html>

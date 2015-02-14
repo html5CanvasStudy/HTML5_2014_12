@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>part6-9</title>
+    <script type="text/javascript">
+        function init() {
+            var theCanvas = document.getElementById("canvasOne");
+            var context = theCanvas.getContext("2d");
+            var rotation = 0;
+            var videoElement = document.createElement("video");
+            var videoDiv = document.createElement('div');
+            document.body.appendChild(videoDiv);
+            videoDiv.appendChild(videoElement);
+            videoDiv.setAttribute("style", "display:none;");
+            var videoType = supportedVideoFormat(videoElement);
+
+            if ( videoType == "" ) {
+                alert("no video support");
+                return;
+            }
+
+            videoElement.setAttribute("src", "../../resources/canvas/video/mov_bbb."+videoType);
+            videoElement.addEventListener("canplaythrough", playVideo, false);
+
+            function playVideo() {
+                videoElement.setAttribute("loop", "true");
+                videoElement.play();
+                setInterval(drawScreen, 33);
+            }
+
+            function drawScreen() {
+                context.fillStyle = "#ffffaa";
+                context.fillRect(0, 0, theCanvas.width, theCanvas.height);
+                context.strokeStyle = "#000000";
+                context.strokeRect(5, 5, theCanvas.width-10, theCanvas.height-10);
+
+                context.save();
+                context.setTransform(1,0,0,1,0,0);
+
+                var angleInRadians = rotation*Math.PI/180;
+                var x = 100;
+                var y = 100;
+                var videoWidth = 320;
+                var videoHeight = 240;
+
+                context.translate(x + 0.5*videoWidth, y + 0.5*videoHeight);
+                context.rotate(angleInRadians);
+                context.drawImage(videoElement, -0.5*videoWidth, -0.5*videoHeight);
+                context.restore();
+                rotation++;
+            }
+
+            function supportedVideoFormat(video) {
+                var webm = "webm", mp4 = "mp4", ogg = "ogg";
+                if ( supportedTypeCheck(video, webm) ) return webm;
+                else if ( supportedTypeCheck(video, mp4) ) return mp4;
+                else if ( supportedTypeCheck(video, ogg) ) return ogg;
+
+                return "";
+            }
+
+            function supportedTypeCheck(video, type) {
+                return video.canPlayType("video/"+type) == "probably" || video.canPlayType("video/"+type) == "maybe";
+            }
+        }
+    </script>
+</head>
+<body onload="init();">
+    <div style="position: absolute; top: 50px; left: 50px;">
+        <canvas id="canvasOne" width="500" height="500">
+            Your browser does not support HTML5 Canvas.
+        </canvas>
+    </div>
+</body>
+</html>
