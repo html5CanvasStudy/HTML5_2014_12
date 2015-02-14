@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>part6-1</title>
+    <script type="text/javascript">
+        /*
+        * HTMLVideoElement 속성(실제 HTMLMediaElement 인터페이스의 일부)
+        * src : 재생하려는 비디오의 URL
+        * autoplay : 자동 재생 여부
+        * loop : 반복재생여부
+        * volume : 비디오의 볼륨
+        * poster : 비디오가 로드되고 있는 동안 보여줄 이미지의 URL
+        *
+        * 아래는 HTMLVideoElement의 메서드
+        * play() : 비디오 재생을 시작
+        * pause() : 비디오 재생을 일시 정지
+        * duration : 비디오의 길이를 초 단위로 나타냄.
+        * currentTime : 비디오의 현재 재생 시간을 초단위로 나타냄.
+        * ended : 비디오 재생이 종료되었는지 여부
+        * muted : 재생중인 비디오에 묵음처리가 되었는지 여부
+        * paused : 비디오가 현재 일시정지인지의 여부
+        * */
+    </script>
+</head>
+<body>
+    <div>
+        <video id="thevideo">
+            <source src="../../resources/canvas/video/mov_bbb.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+            <source src="../../resources/canvas/video/mov_bbb.webm" type='video/webm; codecs="vp8, vorbis"'>
+            <source src="../../resources/canvas/video/mov_bbb.ogg" type='video/ogg; codecs="theora, vorbis"'>
+        </video>
+    </div>
+    <div>
+        (Right-click To Control)
+    </div>
+</body>
+</html>

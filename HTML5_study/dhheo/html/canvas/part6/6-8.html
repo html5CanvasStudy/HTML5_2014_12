@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>part6-8</title>
+    <script type="text/javascript">
+        function init() {
+            var theCanvas = document.getElementById("canvasOne");
+            var context = theCanvas.getContext("2d");
+            var messages = new Array();
+            var videoElement = document.createElement("video");
+            var videoDiv = document.createElement('div');
+            document.body.appendChild(videoDiv);
+            videoDiv.appendChild(videoElement);
+            videoDiv.setAttribute("style", "display:none;");
+            var videoType = supportedVideoFormat(videoElement);
+
+            if ( videoType == "" ) {
+                alert("no video support");
+                return;
+            }
+
+            videoElement.setAttribute("src", "../../resources/canvas/video/mov_bbb."+videoType);
+            videoElement.addEventListener("canplaythrough", playVideo, false);
+
+            function playVideo() {
+                messages.push({time:0, message:"", x:0, y:0});
+                messages.push({time:1, message:"This is monster!", x:90, y:150});
+                messages.push({time:4, message:"Look at those monster!", x:240, y:200});
+                messages.push({time:8, message:"Look at those monster!!!", x:180, y:100});
+
+                videoElement.play();
+                setInterval(drawScreen, 33);
+            }
+
+            function drawScreen() {
+                context.fillStyle = "#ffffaa";
+                context.fillRect(0, 0, theCanvas.width, theCanvas.height);
+                context.strokeStyle = "#000000";
+                context.strokeRect(5, 5, theCanvas.width-10, theCanvas.height-10);
+                context.drawImage(videoElement, 85, 30);
+
+                context.fillStyle = "#000000";
+                context.font = "10px sans";
+                context.fillText("Duration:" + videoElement.duration, 10, 280);
+                context.fillText("Current time:" + videoElement.currentTime, 260, 280);
+                context.fillText("Loop:" + videoElement.loop, 10, 290);
+                context.fillText("Autoplay:" + videoElement.autoplay, 80, 290);
+                context.fillText("Muted:" + videoElement.muted, 160, 290);
+                context.fillText("Controls:" + videoElement.controls, 240, 290);
+                context.fillText("Volume:" + videoElement.volume, 320, 290);
+
+                for ( var i = 0; i < messages.length; i++ ) {
+                    var tempMessage = messages[i];
+                    if ( videoElement.currentTime > tempMessage.time ) {
+                        context.font = "bold 14px sans";
+                        context.fillStyle = "#0000FF";
+                        context.fillText(tempMessage.message, tempMessage.x, tempMessage.y);
+                    }
+                }
+            }
+
+            function supportedVideoFormat(video) {
+                var webm = "webm", mp4 = "mp4", ogg = "ogg";
+                if ( supportedTypeCheck(video, webm) ) return webm;
+                else if ( supportedTypeCheck(video, mp4) ) return mp4;
+                else if ( supportedTypeCheck(video, ogg) ) return ogg;
+
+                return "";
+            }
+
+            function supportedTypeCheck(video, type) {
+                return video.canPlayType("video/"+type) == "probably" || video.canPlayType("video/"+type) == "maybe";
+            }
+        }
+    </script>
+</head>
+<body onload="init();">
+    <div style="position: absolute; top: 50px; left: 50px;">
+        <canvas id="canvasOne" width="500" height="300">
+            Your browser does not support HTML5 Canvas.
+        </canvas>
+    </div>
+</body>
+</html>
