@@ -39,3 +39,16 @@ Extra Utils >>
     <a href='/docs/util_docs.md'>Utility Documentation</a>
   </li>
 </ul>
+
+Mini Project (JAN.2015) >>
+<ul>
+  <li>
+    <a href='http://github.com/html5CanvasStudy/HTML5_2014_12/tree/master/HTML5_study/2015%20JAN%20Project/dhheo'>dhheo</a>
+  </li>
+  <li>
+    <a href='http://github.com/html5CanvasStudy/HTML5_2014_12/tree/master/HTML5_study/2015%20JAN%20Project/jyoh'>jyoh</a>
+  </li>
+  <li>
+    <a href='http://github.com/html5CanvasStudy/HTML5_2014_12/tree/master/HTML5_study/2015%20JAN%20Project/jjkang'>jjkang</a>
+  </li>
+</ul>
