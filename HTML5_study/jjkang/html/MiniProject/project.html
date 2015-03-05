@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang=ko>
+<head>
+<meta charset="UTF-8">
+<title>Chapter 5</title>
+</head>
+<script type="text/javascript">
+window.addEventListener('load', eventWindowLoaded, false);
+
+function eventWindowLoaded(){
+	canvasApp();
+}
+
+function canvasApp(){
+	var pointImage = new Image();
+	pointImage.src = "images/point.png";
+
+	function drawScreen(){
+		context.fillStyle = "#EEEEEE";
+		context.fillRect(0, 0, theCanvas.width, theCanvas.height);
+
+		context.strokeStyle = "#000000";
+		context.strokeRect(1, 1, theCanvas.width - 2, theCanvas.height - 2);
+
+		ball.x += xunits;
+		ball.y += yunits;
+
+		context.fillStyle = "#000000";
+		context.beginPath();
+		context.arc(ball.x, ball.y, 15, 0, Math.PI * 2, true);
+		context.closePath();
+		context.fill();
+
+		// 사각형을 화면에 그림.
+		// 화면에 사각형을 그리기 전 공이 사각형에 닿는지를 검사.
+		for(var i = 0;i < squares.length;i++){
+			context.fillRect(squares[i].x, squares[i].y, squares[i].width, squares[i].height);
+			if((ball.x > squares[i].x && ball.x < squares[i].x + squares[i].width) && (ball.y > squares[i].y && ball.y < squares[i].y + squares[i].height)){
+				if(ball.x < squares[i].x && ball.y < squares[i].y){
+					// 서쪽
+					angle = 360 - angle;
+				}else if(ball.x < squares[i].x && ball.y > squares[i].y){
+					// 북쪽
+					angle = 180 - angle;
+				}else if(ball.x > squares[i].x + squares[i].width && ball.y > squares[i].y + squares[i].heightv){
+					// 동쪽
+					angle = 360 - angle;
+				}else if(ball.x > squares[i].x && ball.y > squares[i].y){
+					// 남쪽
+					angle = 180 - angle;
+				}
+				
+			}
+			// else if(ball.y > theCanvas.height || ball.y < 0){
+			// 	angle = 360 - angle;
+			// }
+		}
+
+		if(ball.x > theCanvas.width || ball.x < 0){
+			angle = 180 - angle;
+		}else if(ball.y > theCanvas.height || ball.y < 0){
+			angle = 360 - angle;
+		}
+
+		updateBall();
+	}
+
+	function updateBall(){
+		radians = angle * Math.PI/180;
+		xunits = Math.cos(radians) * speed;
+		yunits = Math.sin(radians) * speed;
+	}
+
+	// 사각형의 배열.
+	var squares = new Array();
+
+	// 배열에 사각형을 담음.
+	squares.push({x:240, y:240, width:40, height:20});
+	squares.push({x:100, y:100, width:40, height:20});
+	squares.push({x:300, y:100, width:40, height:20});
+	squares.push({x:400, y:100, width:40, height:20});
+	squares.push({x:100, y:400, width:40, height:20});
+	squares.push({x:100, y:300, width:40, height:20});
+	squares.push({x:150, y:300, width:40, height:20});
+	squares.push({x:250, y:300, width:40, height:20});
+	squares.push({x:250, y:400, width:40, height:20});
+
+	var speed = 10;
+	var p1 = {x : 20, y : 20};
+	var angle = 40;
+	var radians = 0;
+	var xunits = 0;
+	var yunits = 0;
+	var ball = {x:p1.x, y:p1.y};
+	updateBall();
+
+	theCanvas = document.getElementById("canvasOne");
+	context = theCanvas.getContext("2d");
+
+	setInterval(drawScreen, 33);
+}
+</script>
+<body>
+	<div style="position:absolute;top:50px;lft:50px;">
+		<canvas id="canvasOne" width="500" height="500">
+		</canvas>
+	</div>
+</body>
+
+</html>
