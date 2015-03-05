@@ -1,0 +1,40 @@
+<head>
+<meta charset="UTF-8">
+<title>HTML5 Video</title>
+<script type="text/javascript">
+	window.addEventListener('load', eventWindowLoaded, false);
+
+	function eventWindowLoaded(){
+		var videoElement = document.getElementById("theVideo");
+		videoElement.addEventListener('progress', updateLoadingStatus, false);
+		videoElement.addEventListener('canplaythrough', playVideo, false);
+	}
+
+	function updateLoadingStatus(){
+		var loadingStatus = document.getElementById("loadingStatus");
+		var videoElement = document.getElementById("theVideo");
+		var percentLoaded = parseInt(((videoElement.beffered.end(0) / videoElement.duration) * 100));
+	}
+
+	function playVideo(){
+		var videoElement = document.getElementById("theVideo");
+		videoElement.play();
+	}
+</script>
+</head>
+
+<body>
+	<div>
+		<video controls id="theVideo" width="320" height="240" preload="auto">
+			<source src="muirbeach.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"' >
+			<source src="muirbeach.webm" type='video/webm; codecs="vp8, vorbis"' >
+			<source src="muirbeach.ogg" type='video/ogg; codecs="theora, vorbis"' >
+		</video>
+	</div>
+		<div id="loadingStatus">
+			0%
+		</div>
+	</div>
+</body>
+
+</html>
