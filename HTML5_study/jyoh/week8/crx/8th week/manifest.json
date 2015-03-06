@@ -1,0 +1,17 @@
+{
+  "manifest_version": 2,
+
+  "name": "HTML5 Study",
+  "description": "This Extension shows a Video Puzzle",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_icon": "./image/icon.png",
+    "default_popup": "./html/puzzle.html",
+    "default_title": "click to run!!!"
+  },
+  "permissions": [
+    "activeTab",
+    "https://ajax.googleapis.com/"
+  ]
+}
