@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset='utf-8'>
+		<title>TEST</title>
+	</head>
+
+	<body>
+		<div>
+			<canvas id='test'></canvas>
+		</div>
+	</body>
+	<script>
+		window.addEventListener('load', prepareVideo, false);
+
+		var videoDiv;
+		var videoElement;
+
+		function prepareVideo(){
+			videoDiv = document.createElement('div');
+			videoElement = document.createElement('video');
+
+			videoElement.setAttribute('src', '../video/sample.mp4');
+
+			videoElement.width = 800;
+			videoElement.height = 600;
+
+			videoDiv.appendChild(videoElement);
+			document.body.appendChild(videoDiv);
+
+			videoElement.addEventListener('canplay', start, false);
+		}
+
+		function start(){
+			videoElement.play();
+		}
+	</script>
+</html>
