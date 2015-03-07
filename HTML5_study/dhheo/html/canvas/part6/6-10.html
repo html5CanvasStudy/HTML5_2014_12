@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>part6-10</title>
+    <script type="text/javascript">
+        /*
+        * canplaythrough 된 상태일때 부터 비디오의 크기를 받아올 수 있다.
+        * */
+        function init() {
+            var theCanvas = document.getElementById("canvasOne");
+            var context = theCanvas.getContext("2d");
+            var videoElement = document.createElement("video");
+            var videoDiv = document.createElement('div');
+            var rows = 4;
+            var cols = 4;
+            var xPad = 10;
+            var yPad = 10;
+            var startXOffset = 10;
+            var startYOffset = 10;
+            var board = new Array();
+            var partWidth;
+            var partHeight;
+
+            supportedVideoFormat();
+
+            for ( var i = 0; i < cols; i++ ) {
+                board[i] = new Array();
+                for ( var j = 0; j < rows; j++ ) board[i][j] = { finalCol : i, finalRow : j, selected: false };
+            }
+
+            board = randomizeBoard(board);
+            theCanvas.addEventListener("mouseup", eventMouseUp, false);
+            setInterval(drawScreen, 33);
+
+            function supportedVideoFormat() {
+                var videoType = "";
+                document.body.appendChild(videoDiv);
+                videoDiv.appendChild(videoElement);
+
+                var webm = "webm", mp4 = "mp4", ogg = "ogg";
+                if ( supportedTypeCheck(videoElement, mp4) ) videoType = mp4;
+                else if ( supportedTypeCheck(videoElement, webm) ) videoType = webm;
+                else if ( supportedTypeCheck(videoElement, ogg) ) videoType = ogg;
+
+                if ( videoType == "" ) {
+                    alert("no video support");
+                    return;
+                }
+
+                videoElement.setAttribute("src", "../../resources/canvas/video/mov_bbb."+videoType);
+                videoElement.addEventListener("canplaythrough", playVideo, false);
+            }
+
+            function supportedTypeCheck(video, type) {
+                return video.canPlayType("video/"+type) == "probably" || video.canPlayType("video/"+type) == "maybe";
+            }
+
+            function playVideo() {
+                videoElement.setAttribute("loop", "true");
+                videoElement.play();
+
+                partWidth = videoElement.videoWidth/cols;
+                partHeight = videoElement.videoHeight/cols;
+
+                theCanvas.width = videoElement.videoWidth + cols*xPad + startXOffset;
+                theCanvas.height = videoElement.videoHeight + rows*yPad + startYOffset;
+
+                videoDiv.setAttribute("style", "position:absolute; left: 50px; top: "+(theCanvas.height+startXOffset+50)+"px; ");
+            }
+
+            function randomizeBoard(board) {
+                var newBoard = new Array();
+                var _cols = board.length;
+                var _rows = board[0].length;
+
+                for ( var i = 0; i < _cols; i++ ) {
+                    newBoard[i] = new Array();
+                    for ( var j = 0; j < _rows; j++ ) {
+                        var found = false;
+                        var rndCol = 0;
+                        var rndRow = 0;
+
+                        while(!found) {
+                            var rndCol = Math.floor(Math.random()*_cols);
+                            var rndRow = Math.floor(Math.random()*_rows);
+
+                            if ( board[rndCol][rndRow] != false ) found = true;
+                        }
+
+                        newBoard[i][j] = board[rndCol][rndRow];
+                        board[rndCol][rndRow] = false;
+                    }
+                }
+
+                return newBoard;
+            }
+
+            function eventMouseUp(event) {
+                var mouseX;
+                var mouseY;
+                var pieceX;
+                var pieceY;
+
+                if ( event.layerX || event.layerX == 0 ) { // ff
+                    mouseX = event.layerX;
+                    mouseY = event.layerY;
+                } else if ( event.offsetX || event.offsetX == 0 ) { // opera
+                    mouseX = event.offsetX;
+                    mouseY = event.offsetY;
+                }
+
+                var selectedList = new Array();
+                for ( var c = 0; c < cols; c++ ) {
+                    for ( var r = 0; r < rows; r++ ) {
+                        pieceX = c*partWidth + c*xPad + startXOffset;
+                        pieceY = r*partHeight + r*yPad + startYOffset;
+
+                        if ( (mouseY >= pieceY) && (mouseY <= pieceY + partHeight) && (mouseX >= pieceX) && (mouseX <= pieceX + partWidth) ) {
+                            if ( board[c][r].selected ) board[c][r].selected = false;
+                            else board[c][r].selected = true;
+                        }
+                        if ( board[c][r].selected ) selectedList.push({col : c, row : r});
+                    }
+                }
+
+                if ( selectedList.length == 2 ) {
+                    var selected1 = selectedList[0];
+                    var selected2 = selectedList[1];
+                    var tempPiece1 = board[selected1.col][selected1.row];
+
+                    board[selected1.col][selected1.row] = board[selected2.col][selected2.row];
+                    board[selected2.col][selected2.row] = tempPiece1;
+                    board[selected1.col][selected1.row].selected = false;
+                    board[selected2.col][selected2.row].selected = false;
+                }
+            }
+
+            function drawScreen() {
+                context.fillStyle = "#303030";
+                context.fillRect(0, 0, theCanvas.width, theCanvas.height);
+                context.strokeStyle = "#ffffff";
+                context.strokeRect(5, 5, theCanvas.width-startXOffset, theCanvas.height-startYOffset);
+
+                for ( var c = 0; c < cols; c++ ) {
+                    for ( var r = 0; r < rows; r++ ) {
+                        var tempPiece = board[c][r];
+                        var imageX = tempPiece.finalCol*partWidth;
+                        var imageY = tempPiece.finalRow*partHeight;
+                        var placeX = c*partWidth + c*xPad + startXOffset;
+                        var placeY = r*partHeight + r*yPad + startYOffset;
+
+                        context.drawImage(videoElement, imageX, imageY, partWidth, partHeight, placeX, placeY, partWidth, partHeight);
+
+                        if ( tempPiece.selected ) {
+                            context.strokeStyle = '#ffff00';
+                            context.strokeRect(placeX, placeY, partWidth, partHeight);
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body onload="init();">
+    <div style="position: absolute; top: 50px; left: 50px;">
+        <canvas id="canvasOne" width="370" height="300">
+            Your browser does not support HTML5 Canvas.
+        </canvas>
+    </div>
+</body>
+</html>

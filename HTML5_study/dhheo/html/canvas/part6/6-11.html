@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>part6-11</title>
+    <script type="text/javascript">
+        /*
+        * 1. 비디오, 오디오
+        *   - 외부 블러그인의 도움없이 웹 브라우저 자체에 내장되어 플레이어 사용(Javascript로 제어가능)
+        * 2. 비디오 속성
+        *   - src : 파일의 URL
+        *   - width : 폭
+        *   - height : 높이
+        *   - controls : 컨트롤 바 표시
+        *   - preload : "auto" 속성일 경우 페이지가 로딩되면 자동으로 비디오를 다운 받음
+        *   - autoplay : 비디오를 자동으로 재생
+        *   - loop : 반복적으로 재생
+        *   - poster : 재생 이전에 보여줄 대체 이미지
+        * 3. 오디오 속성
+        *   - src : 파일의 URL
+        *   - controls : 컨트롤 바 표시
+        *   - preload : "auto" 속성일 경우 페이지가 로딩되면 자동으로 오디오를 다운 받음
+        *   - autoplay : 오디오를 자동으로 재생
+        *   - loop : 반복적으로 재생
+        * 4. 미디어 포멧
+        *   - 웹 브라우저 별로 지원하는 비디오, 오디오 포맷이 다르기 때문에 이를 위해 source 요소사용
+        *   - source 요소는 다른 종류 포맷의비디오를 나열하여 각 브라우저별로 재생 가능한 포맷을 선택하여 플레이 가능
+        *   - src : 미디어 데이터의 url
+        *   - type : 미디어 데이터의 MIME타입
+        *   - type 속성이 있음으로서 미디어의 재생 여부를 파일을 다운받기 전에 확인하여 네트워크 트래픽을 줄일수있음
+        * 4. 미디어 API
+        *   - src : src 값
+        *   - currentSrc : 재생중인 URL
+        *   - currentTime : 현재 재생위치 시간
+        *   - startTime : 재생할 위치 시간
+        *   - duration : 데이터의 시간
+        *   - paused : 일시 정지 상태 여부
+        *   - defaultPlaybackRate : 기본 재생 속도(default 1)
+        *   - playbackRate : 재생속도(dafault 1, -는 역으로)
+        *   - ended : 재생 종료 여부
+        *   - muted : 음소거 여부
+        *   - volume : 음량(0~1)
+        *   - load() : 미디어를 다시 읽어드림
+        *   - play() : 미디어 재생
+        *   - pause() : 일시정지
+        * 5. 미디어이벤트 로딩시
+        *   - emptied : 이전 데이터 비움
+        *   - loadstart : 데이터 로딩 시작
+        *   - progress : 데이터 로딩 중(가끔 발생)
+        *   - loadedmetadata : 메타데이터 읽음
+        *   - loadeddata : 데이타 로딩완료
+        *   - loadend : 데이터 로딩 완료(load, abort, error 뒤에 발생)
+        *   - error : 에러발생
+        *   - abort : 다운로드 중지(에러)
+        *   - suspend : 다운로드 중지(에러X)
+        *   - stalled : 다운로드가 느려짐
+        *   - canplaythrough : 다운로드가 유지되고 마지막까지 재생할 수 있는 시점에 발생
+        *   - canplay : 재생을 시작 할 수 있음
+        * 6. 미디어 이벤트 재생시
+        *   - play : 재생 시작 알림
+        *   - playing : 재생이 시작됨
+        *   - pause : 재생 일시 정지
+        *   - timeupdate : 재생중(여러번 발생)
+        *   - waiting : 다음 프레임 다운로드 대기중
+        *   - ended : 재생 종료
+        * */
+        function init() {
+            var theCanvas = document.getElementById("canvasOne");
+            var context = theCanvas.getContext("2d");
+            var videoElement = document.createElement("video");
+            var videoDiv = document.createElement('div');
+            var buttonSheet = new Image();
+            var bW = 32;
+            var bH = 32;
+            var playX = 190;
+            var playY = 300;
+            var pauseX = 230;
+            var pauseY = 300;
+            var stopX = 270;
+            var stopY = 300;
+            var loadCount = 0;
+            var itemsToLoad = 2;
+
+            theCanvas.addEventListener("mouseup", eventMouseUp, false);
+            supportedVideoFormat();
+            setInterval(drawScreen, 33);
+
+            function supportedVideoFormat() {
+                var videoType = "";
+                document.body.appendChild(videoDiv);
+                videoDiv.appendChild(videoElement);
+                videoDiv.setAttribute("style", "display:none;");
+
+                var webm = "webm", mp4 = "mp4", ogg = "ogg";
+                if ( supportedTypeCheck(videoElement, mp4) ) videoType = mp4;
+                else if ( supportedTypeCheck(videoElement, webm) ) videoType = webm;
+                else if ( supportedTypeCheck(videoElement, ogg) ) videoType = ogg;
+
+                if ( videoType == "" ) {
+                    alert("no video support");
+                    return;
+                }
+
+                videoElement.setAttribute("src", "../../resources/canvas/video/mov_bbb."+videoType);
+                //videoElement.addEventListener("canplay", itemLoaded, false);
+
+                buttonSheet.src = "../../resources/canvas/img/videocontrol.png";
+                //buttonSheet.onload = itemLoaded;
+            }
+
+            function supportedTypeCheck(video, type) {
+                return video.canPlayType("video/"+type) == "probably" || video.canPlayType("video/"+type) == "maybe";
+            }
+/*
+            function itemLoaded() {
+                loadCount++;
+                if ( loadCount >= itemsToLoad ) drawScreen();
+            }
+*/
+            function eventMouseUp(event) {
+                var mouseX;
+                var mouseY;
+
+                if ( event.layerX || event.layerX == 0 ) { // ff
+                    mouseX = event.layerX;
+                    mouseY = event.layerY;
+                } else if ( event.offsetX || event.offsetX == 0 ) { // opera
+                    mouseX = event.offsetX;
+                    mouseY = event.offsetY;
+                }
+
+                // 마우스로 재생버튼 누름
+                if ( (mouseY >= playY) && (mouseY <= playY + bH) && (mouseX >= playX) && (mouseX <= playX + bW) ) {
+                    if ( videoElement.paused ) videoElement.play();
+                }
+
+                // 마우스로 정지 버튼 누름
+                if ( (mouseY >= stopY) && (mouseY <= stopY + bH) && (mouseX >= stopX) && (mouseX <= stopX + bW) ) {
+                    videoElement.pause();
+                    videoElement.currentTime = 0;
+                }
+
+                // 마우스로 일시정지 버튼 누름
+                if ( (mouseY >= pauseY) && (mouseY <= pauseY + bH) && (mouseX >= pauseX) && (mouseX <= pauseX + bW) ) {
+                    if ( videoElement.paused == false ) videoElement.pause();
+                    else videoElement.play();
+                }
+            }
+
+            function drawScreen() {
+                context.fillStyle = "#ffffaa";
+                context.fillRect(0, 0, theCanvas.width, theCanvas.height);
+                context.strokeStyle = "#000000";
+                context.strokeRect(5, 5, theCanvas.width-10, theCanvas.height-10);
+                context.drawImage(videoElement, 85, 30);
+
+                if ( !videoElement.paused ) context.drawImage(buttonSheet, 0, 32, bW, bH, playX, playY, bW, bH); // 재생버튼 누름
+                else context.drawImage(buttonSheet, 0, 0, bW, bH, playX, playY, bW, bH); // 재생버튼 안 누름
+
+                if ( videoElement.paused ) { // 일시정지 버튼 누름
+                    if ( videoElement.currentTime == 0 ) context.drawImage(buttonSheet, 32, 0, bW, bH, pauseX, pauseY, bW, bH);
+                    else context.drawImage(buttonSheet, 32, 32, bW, bH, pauseX, pauseY, bW, bH);
+                } else context.drawImage(buttonSheet, 32, 0, bW, bH, pauseX, pauseY, bW, bH); // 일시정지 버튼 안 누름
+
+                if ( videoElement.currentTime == 0 ) context.drawImage(buttonSheet, 64, 32, bW, bH, stopX, stopY, bW, bH); // 정지 버튼 안 누름
+                else context.drawImage(buttonSheet, 64, 0, bW, bH, stopX, stopY, bW, bH); // 정지 버튼 안 누름
+            }
+        }
+    </script>
+</head>
+<body onload="init();">
+    <div style="position: absolute; top: 50px; left: 50px;">
+        <canvas id="canvasOne" width="500" height="350">
+            Your browser does not support HTML5 Canvas.
+        </canvas>
+    </div>
+</body>
+</html>

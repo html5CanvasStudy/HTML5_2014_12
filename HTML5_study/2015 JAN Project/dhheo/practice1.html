@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>practice1</title>
+    <script type="text/javascript" src="../../dhheo/html/resources/canvas/js/jscolor.js" ></script>
+    <script type="text/javascript">
+        function Alkanoid() {
+            var theCanvas = document.getElementById("canvas");
+            var context = theCanvas.getContext("2d");
+            var fontSize = 30;
+            var angle_180 = 180;
+            var angle_360 = 360;
+            var canvas_background = '#000000';
+            var ball_color = '#ffffff';
+            var bar_color = '#ffffff';
+            var ball_radius = 10;
+            var move_bar_width = 100;
+            var move_bar_height = 10;
+            var bar_move_speed = 20;
+            var bar_pos_w = theCanvas.width/2 - move_bar_width/2;
+            var bar_pos_h = theCanvas.height - ball_radius - move_bar_height + 1;
+            var prev_bar_pos_w = bar_pos_w;
+            var ball_angle_two = [Math.floor(Math.random()*50)+200, Math.floor(Math.random()*50)+290];
+            var ball_angle = ball_angle_two[Math.floor(Math.random()*2)];
+            var ball_speed = 3;
+            var ball = {x : theCanvas.width/2-ball_radius, y : theCanvas.height-ball_radius-move_bar_height*2-ball_speed, prevx: 0, prevy: 0};
+            var block_colors = ['red', 'green', 'blue', 'yellow', 'gray', 'white', canvas_background];
+            var block_border_color = 'black';
+            var block_border_width = 2;
+            var leftInitPosition = 50;
+            var topInitPosition = 50;
+            var widthByEachBlock = 50;
+            var heightByEachBlock = 20;
+            var interval_speed = 20;
+            var blockRowCount = 5;
+            var blockColumnCount = (theCanvas.width - (widthByEachBlock*2))/widthByEachBlock;
+            var arrayForBlock = new Array(blockRowCount);
+            var breakBlockCount = 0;
+            var allBlockCount = 0;
+            var interval;
+            var alkanoidImg = new Image();
+            alkanoidImg.addEventListener('load', alkanoidInit, false);
+            alkanoidImg.src = '../../dhheo/html/resources/canvas/img/alkanoid.png';
+
+            this.start = function() {
+                for ( var i = 0; i < blockRowCount; i++ ) {
+                    arrayForBlock[i] = new Array(blockColumnCount);
+                    for ( var j = 0; j < blockColumnCount; j++ ) {
+                        var randomNum = parseInt(Math.random()*block_colors.length);
+                        var left = leftInitPosition*(j+1);
+                        var top = (i == 0 ? topInitPosition : topInitPosition+(heightByEachBlock*i));
+                        var block_color = block_colors[randomNum];
+
+                        if ( block_color != canvas_background ) allBlockCount++;
+
+                        var tmp = {left : left, top : top, color : block_color};
+                        arrayForBlock[i][j] = tmp;
+                    }
+                }
+
+                drawScreen();
+            }
+
+            function drawScreen() {
+            	context.fillStyle = canvas_background;
+                context.fillRect(0, 0, theCanvas.width, theCanvas.height);
+
+                moveBar(prev_bar_pos_w, bar_pos_w);
+                createBlock();
+                gameInterval();
+            }
+
+            function gameInterval() {
+                window.addEventListener('keydown', keydownEvent, false);
+                interval = setInterval(drawBall, interval_speed);
+            }
+            
+            function drawBall() {
+                if ( allBlockCount == breakBlockCount ) gameClear();
+
+            	moveBall();
+                if ( !barCheck() ) wallCheck();
+                blockCheck();
+            }
+
+            function moveBall() {
+            	context.fillStyle = canvas_background;
+            	context.beginPath();
+            	context.arc(ball.x, ball.y, ball_radius+1, 0, Math.PI*2, true);
+            	context.closePath();
+            	context.fill();
+
+                ball.prevx = ball.x;
+                ball.prevy = ball.y;
+            	
+            	ball.x += Math.cos(ball_angle*Math.PI/angle_180)*ball_speed;
+            	ball.y += Math.sin(ball_angle*Math.PI/angle_180)*ball_speed;
+            	
+            	context.fillStyle = ball_color;
+            	context.beginPath();
+            	context.arc(ball.x, ball.y, ball_radius, 0, Math.PI*2, true);
+            	context.closePath();
+            	context.fill();
+            }
+            
+            function wallCheck() {
+            	if ( ball.x > theCanvas.width - ball_radius || ball.x < ball_radius ) {
+            		ball_angle = angle_180 - ball_angle;
+            	} else if ( ball.y < ball_radius ) {
+            		ball_angle = angle_360 - ball_angle;
+            	} else if ( ball.y > bar_pos_h ) {
+                    gameOver();
+                }
+            }
+
+            function barCheck() {
+                if ( ball.x > bar_pos_w && ball.x < bar_pos_w + move_bar_width && ball.y + ball_radius + ball_speed > bar_pos_h ) {
+                    ball_angle = angle_360 - ball_angle;
+                    moveBall();
+                    return true;
+                }
+                return false;
+            }
+            
+            function blockCheck() {
+                var isAngle = false;
+            	for ( var i = 0; i < blockRowCount; i++ ) {
+            		for ( var j = 0; j < blockColumnCount; j++ ) {
+                        if ( arrayForBlock[i][j]['color'] == canvas_background ) continue;
+            			isAngle = ballBounce(arrayForBlock[i][j]);
+                        if ( isAngle ) {
+                            arrayForBlock[i][j]['color'] = canvas_background;
+                            createBlock();
+                            breakBlockCount++;
+                            break;
+                        }
+            		}
+                    if ( isAngle ) break;
+            	}
+            }
+            
+            function ballBounce(block) {
+            	var isYaxis = ball.y > block.top - ball_radius && ball.y < block.top + heightByEachBlock + ball_radius;
+            	var isXaxis = ball.x > block.left - ball_radius && ball.x < block.left + widthByEachBlock + ball_radius;
+            	
+   				if ( isYaxis && isXaxis ) {
+                    ballBouncePosition(block);
+
+                    return true;
+   				}
+
+                return false;
+            }
+
+            function ballBouncePosition(block){ // 모서리 n,n일 때 버그있는것 같음ㅠ
+                var isAngleChange = false;
+                var changeAngle = ball_angle;
+                var leftBall = ball.x + ball_radius;
+                var rightBall = ball.x - ball_radius;
+                var topBall = ball.y + ball_radius;
+                var bottomBall = ball.y - ball_radius;
+
+                var leftVal = leftBall - block.left;
+                var rightVal = block.left + widthByEachBlock - rightBall;
+                var topVal = topBall - block.top;
+                var bottomVal = block.top + heightByEachBlock - bottomBall;
+
+                var leftX = leftVal < block.left + widthByEachBlock - leftBall && leftVal <= ball_speed;
+                var rightX = rightVal < rightBall - block.left && rightVal <= ball_speed;
+                var topY = topVal < block.top + heightByEachBlock - topBall && topVal <= ball_speed;
+                var bottomY = bottomVal < bottomBall - block.top && bottomVal <= ball_speed;
+
+                if ( leftX || rightX ) {
+                    ball_angle = angle_180 - ball_angle;
+                    isAngleChange = true;
+                } else if ( topY || bottomY ) {
+                    ball_angle = angle_360 - ball_angle;
+                    isAngleChange = true;
+                }
+
+                if ( leftX && topY ) {
+                    angleCalculate(leftVal, topVal, isAngleChange, changeAngle);
+                } else if ( leftX && bottomY ) {
+                    angleCalculate(leftVal, bottomVal, isAngleChange, changeAngle);
+                } else if ( rightX && topY ) {
+                    angleCalculate(rightVal, topVal, isAngleChange, changeAngle);
+                } else if ( rightX && bottomY ) {
+                    angleCalculate(rightVal, bottomVal, isAngleChange, changeAngle);
+                }
+                /*var b_dy = widthByEachBlock/2;
+                var b_dx = heightByEachBlock/2;
+                var dy = ball.y-ball.prevy;
+                var dx = ball.y-ball.prevx;
+                console.log("ball Angle : ",Math.atan2(dy, dx)*180/Math.PI);
+                console.log("block Angle : ",Math.atan2(b_dy, b_dx)*180/Math.PI);*/
+                moveBall();
+            }
+
+            function angleCalculate(val1, val2, isAngleChange, changeAngle) {
+                if ( val1 < val2 ) {
+                    angleChange(isAngleChange, changeAngle, angle_180);
+                } else if ( val1 > val2 ) {
+                    angleChange(isAngleChange, changeAngle, angle_360);
+                } else {
+                    ball_angle = -ball_angle;
+                }
+            }
+
+            function angleChange(isAngleChange, changeAngle, angle) {
+                if ( isAngleChange ) {
+                    ball_angle = angle - changeAngle;
+                } else {
+                    ball_angle = angle - ball_angle;
+                }
+            }
+            
+            function createBlock() {
+                for ( var i = 0; i < arrayForBlock.length; i++ ) {
+                    for ( var j = 0; j < arrayForBlock[i].length; j++ ) {
+                        var left = arrayForBlock[i][j]['left'];
+                        var top = arrayForBlock[i][j]['top'];
+                        var block_color = arrayForBlock[i][j]['color'];
+                        var tmpWidth = block_border_width*2;
+
+                        context.fillStyle = block_color;
+                        context.fillRect(left+block_border_width, top+block_border_width, widthByEachBlock-tmpWidth, heightByEachBlock-tmpWidth);
+
+                        context.strokeStyle = block_border_color;
+                        context.strokeRect(left, top, widthByEachBlock, heightByEachBlock);
+                    }
+                }
+            }
+
+            function clrInterval() {
+                window.removeEventListener('keydown', keydownEvent, false);
+                clearInterval(interval);
+            }
+
+            function gameOver() {
+                clrInterval();
+                drawText('Game Over');
+            }
+
+            function gameClear() {
+                clrInterval();
+                drawText('Game Clear');
+            }
+
+            function drawText(text) {
+                context.font = 'bold italic '+fontSize+'pt 나눔고딕';
+                context.textAlign = 'center';
+                context.fillStyle = 'white';
+                context.fillText(text, theCanvas.width/2, theCanvas.height/2);
+            }
+
+            function clearText(text) {
+                var textWidth = context.measureText(text).width;
+                context.fillStyle = "black";
+                context.fillRect(theCanvas.width/2 - textWidth/2, theCanvas.height/2-fontSize-10, textWidth+10, fontSize+15);
+            }
+
+            function keydownEvent(e) {
+                var tmpBarPos = bar_pos_w;
+
+                if ( e.keyCode == 37 ) { // left
+                    bar_pos_w = bar_pos_w - bar_move_speed;
+                    if ( bar_pos_w < ball_speed ) {
+                        bar_pos_w = bar_pos_w + bar_move_speed;
+                        return;
+                    }
+                    moveBar(tmpBarPos, bar_pos_w);
+                } else if ( e.keyCode == 39 ) { // right
+                    bar_pos_w = bar_pos_w + bar_move_speed;
+                    if ( bar_pos_w + move_bar_width > theCanvas.width - ball_speed ) {
+                        bar_pos_w = bar_pos_w - bar_move_speed;
+                        return;
+                    }
+                    moveBar(tmpBarPos, bar_pos_w);
+                }
+            }
+
+            function moveBar(prev_bar_pos_w, bar_pos_w) {
+                context.fillStyle = canvas_background;
+                context.fillRect(prev_bar_pos_w, bar_pos_h, move_bar_width, move_bar_height);
+
+                context.fillStyle = bar_color;
+                context.fillRect(bar_pos_w, bar_pos_h, move_bar_width, move_bar_height);
+            }
+
+            function alkanoidInit() {
+                context.drawImage(alkanoidImg, 0, 0, theCanvas.width, theCanvas.height);
+            }
+
+            function isEmpty(obj) {
+                if ( obj != undefined && obj != null && obj != "" ) return false;
+                return true;
+            }
+
+            this.stop = function() {
+                clrInterval();
+                drawText("STOP");
+            }
+
+            this.resume = function() {
+                clearText("STOP");
+                gameInterval();
+            }
+
+            this.ballSize = function(ball_size) {
+                if ( !isEmpty(ball_size) ) {
+                    ball_radius = parseInt(ball_size);
+                    bar_pos_h = theCanvas.height - ball_radius - move_bar_height + 1;
+                    ball = {x : theCanvas.width/2-ball_radius, y : theCanvas.height-ball_radius-move_bar_height*2-ball_speed, prevx: 0, prevy: 0};
+                }
+            }
+
+            this.ballColor = function(ball_clr) {
+                var clr = '#'+ball_clr;
+                if ( !isEmpty(ball_clr) && clr != '#fff' && clr != '#ffffff' && clr != '#black') ball_color = clr;
+            }
+
+            this.ballSpeed = function(speed) {
+                if ( !isEmpty(speed) ) {
+                    ball_speed = speed;
+                    ball = {x : theCanvas.width/2-ball_radius, y : theCanvas.height-ball_radius-move_bar_height*2-ball_speed, prevx: 0, prevy: 0};
+                }
+            }
+
+            this.barColor = function(color) {
+                var clr = '#'+color;
+                if ( !isEmpty(color) && clr != '#fff' && clr != '#ffffff' && clr != '#black') bar_color = clr;
+            }
+        }
+
+        window.onload = function() {
+            var alkanoid = new Alkanoid();
+
+            var start = returnObj("start");
+            var stop = returnObj("stop");
+            var resume = returnObj("resume");
+            var ballSet = returnObj("ballSetting");
+
+            start.addEventListener('click', gameStart, false);
+            stop.addEventListener('click', gameStop ,false);
+            resume.addEventListener('click', gameResume ,false);
+
+            function gameStart() {
+                alkanoid.ballSize(returnObj("ballSize").value);
+                alkanoid.ballColor(returnObj("ballColor").value);
+                alkanoid.ballSpeed(returnObj("ballSpeed").value);
+                alkanoid.barColor(returnObj("barColor").value);
+
+                alkanoid.start();
+                resume.style.display = 'none';
+                ballSet.style.display = 'none';
+                start.style.display = 'none';
+            }
+
+            function gameStop() {
+                alkanoid.stop();
+                resume.style.display = '';
+            }
+
+            function gameResume() {
+                alkanoid.resume();
+                resume.style.display = 'none';
+            }
+
+            function returnObj(id) {
+                return document.getElementById(id);
+            }
+        }
+    </script>
+</head>
+<body>
+    <div style="position: absolute; top: 50px; left: 50px;">
+        <canvas id="canvas" width="500" height="600">
+            Your browser does not support HTML5 Canvas.
+        </canvas>
+
+        <div>
+            <input type="button" id="start" value="Game Start"/>
+            <input type="button" id="stop" value="Game Stop" />
+            <input type="button" id="resume" value="Game Resume" />
+        </div>
+        <div id="ballSetting">
+            ball Size : <input type="text" maxlength="1" id="ballSize" style="width:8px;"/>
+            ball Speed : <input type="text" maxlength="1" id="ballSpeed" style="width:8px;"/>
+            ball Color : <input class="color" value="ffffff" id="ballColor" style="width:45px;"/>
+            bar Color : <input class="color" value="ffffff" id="barColor" style="width:45px;"/>
+        </div>
+    </div>
+</body>
+</html>

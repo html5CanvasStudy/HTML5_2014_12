@@ -50,7 +50,7 @@ function executeCanvas(){
 
 
 		var cy = 3 * (p1.y - p0.y);
-		var by = 3 * (p2.y - p1.y);
+		var by = 3 * (p2.y - p1.y) - cy;
 		var ay = p3.y - p0.y - cy - by;
 
 
