@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<script src='../js/logger.js'></script>
+	<script src='../js/html5video.js'></script>
+	<title>Canvas & Video 1</title>
+</head>
+<body>
+	<div>
+		<pre>This is video tag. play by html attributes.</pre>
+		<video src='../video/sample.mp4'
+			autoplay='true' loop='true'></video>
+	</div>
+	<div id='loadingStatus'>0%</div>
+	<!-- preloading 을 구현하기 위해서 video 태그에 preload 어트리뷰트를 추가 -->
+	<div>
+		<pre>This is video with source tag. play by html attributes. play by javascript.</pre>
+		<video id='jsvideo' controls preload='auto'>
+			<source src='../video/sample.mp4' type='video/mp4' codecs='avc1.42E01E, mp4a.40.2'>
+			<source src='../video/sample.webm' type='video/webm' codecs='vp8, vorbis'>
+			<source src='../video/sample.ogv' type='video/ogg' codecs='theora, vorbis'>
+		</video>
+	</div>
+	<div id='canvasVideoArea'>
+		<pre>This is in Canvas.</pre>
+		<canvas id='video1'>
+			An not load Canvas
+		</canvas>
+	</div>
+	<form>
+		<!--  value 는 페이지 onload 에서 원본 비디오의 넓이를 받아오는 것으로 -->
+		Video size : <input type='range' id='videoSize' min='80' max='1280' step='1'>
+	</form>
+</body>
+</html>
