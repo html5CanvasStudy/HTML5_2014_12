@@ -34,6 +34,9 @@ show history >>
   <li>
     <a href='/history/20150228.md'>2015.02.28</a>
   </li>
+  <li>
+    <a href='/history/20150307.md'>2015.03.07</a>
+  </li>
 </ul>
 
 Extra Utils >>
