@@ -46,7 +46,7 @@ Extra Utils >>
   </li>
 </ul>
 
-Mini Project (JAN.2015) >>
+Mini Project (JAN.2015) : Arkanoid >>
 <ul>
   <li>
     <a href='http://github.com/html5CanvasStudy/HTML5_2014_12/tree/master/HTML5_study/2015%20JAN%20Project/dhheo'>dhheo</a>
@@ -59,7 +59,7 @@ Mini Project (JAN.2015) >>
   </li>
 </ul>
 
-MINI Project (MAR.2015) >>
+MINI Project (MAR.2015) : Video Puzzle >>
 <ul>
   <li>
     <a href=''>
