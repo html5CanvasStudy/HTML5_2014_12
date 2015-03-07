@@ -58,3 +58,22 @@ Mini Project (JAN.2015) >>
     <a href='http://github.com/html5CanvasStudy/HTML5_2014_12/tree/master/HTML5_study/2015%20JAN%20Project/jjkang'>jjkang</a>
   </li>
 </ul>
+
+MINI Project (MAR.2015) >>
+<ul>
+  <li>
+    <a href=''>
+      dhheo
+    </a>
+  </li>
+  <li>
+    <a href=''>
+      jyoh
+    </a>
+  </li>
+  <li>
+    <a href=''>
+      jjkang
+    </a>
+  </li>
+</ul>
