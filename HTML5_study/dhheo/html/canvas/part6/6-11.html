@@ -157,10 +157,13 @@
                 if ( !videoElement.paused ) context.drawImage(buttonSheet, 0, 32, bW, bH, playX, playY, bW, bH); // 재생버튼 누름
                 else context.drawImage(buttonSheet, 0, 0, bW, bH, playX, playY, bW, bH); // 재생버튼 안 누름
 
-                if ( videoElement.paused ) context.drawImage(buttonSheet, 32, 32, bW, bH, pauseX, pauseY, bW, bH); // 일시정지 버튼 누름
-                else context.drawImage(buttonSheet, 32, 0, bW, bH, pauseX, pauseY, bW, bH); // 일시정지 버튼 안 누름
+                if ( videoElement.paused ) { // 일시정지 버튼 누름
+                    if ( videoElement.currentTime == 0 ) context.drawImage(buttonSheet, 32, 0, bW, bH, pauseX, pauseY, bW, bH);
+                    else context.drawImage(buttonSheet, 32, 32, bW, bH, pauseX, pauseY, bW, bH);
+                } else context.drawImage(buttonSheet, 32, 0, bW, bH, pauseX, pauseY, bW, bH); // 일시정지 버튼 안 누름
 
-                context.drawImage(buttonSheet, 64, 0, bW, bH, stopX, stopY, bW, bH); // 정지 버튼 안 누름
+                if ( videoElement.currentTime == 0 ) context.drawImage(buttonSheet, 64, 32, bW, bH, stopX, stopY, bW, bH); // 정지 버튼 안 누름
+                else context.drawImage(buttonSheet, 64, 0, bW, bH, stopX, stopY, bW, bH); // 정지 버튼 안 누름
             }
         }
     </script>
