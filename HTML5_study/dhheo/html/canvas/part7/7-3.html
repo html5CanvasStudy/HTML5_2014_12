@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>part7-3</title>
+    <script type="text/javascript">
+        /***
+         * 함수
+         * load() : <audio> 태그의 src속성에서 지정한 사운드 파일을 로딩한다.
+         * play() : <audio> 태그의 src속성에서 지정한 사운드 파일을 재생한다. 파일이 아직 준비되지 않았다면 파일을 로드하고 재생한다.
+         * pause() : 재생하고 있는 오디오 파일을 일시 정지한다.
+         * canPlayType() : 매개변수로 MIME 타입을 가지며, 브라우저가 오디오 파일을 재생할 수 있으면 maybe 또는 probably 값을 리턴하고, 재생할 수 없으면 " "를 리턴한다.
+         * buffered() : 오디오 버퍼링 부분의 시작과 종료 시간을 지정합니다.
+         *
+         * 속성
+         * duration : audio 객체가 가리키는 사운드의 전체 길이로서, 초 단위로 나타낸다.
+         * currentTime : 재생 중인 오디오 파일의 현재 재생 위치로서, 초 단위로 나타낸다.
+         * loop : true 또는 false, currentTime이 duration에 다다르면 오디오 클립을 처음부터 다시 재생할지 결정한다.
+         * autoplay : true 또는 false, 오디오 파일의 로딩이 끝나면 자동으로 재생을 시작할지 결정한다.
+         * muted : true 또는 false, 이 속성을 true로 설정하면 볼륨 설정에 관계없이 소리를 내지 않는다.
+         * controls : true 또는 false, HTML 페이지에 audio 객체를 위한 컨트롤을 출력한다.
+         *            이 컨트롤은 <div> 안의 <audio> 태그를 통해 HTML 페이지에 출력한다. 만약 캔버스에 컨트롤을 넣고 싶으면 비디오의 경우처럼 직접 만들어야 한다.
+         * volume : audio 객체의 볼륨 레벨. 0에서 1사이의 값이다.
+         * paused : true 또는 false, audio 객체가 일시정지 상태인지 나타낸다. pause() 함수를 호출하면 true로 설정된다.
+         * ended : true 또는 false, audio 객체가 duration까지 모두 재생되고 나면 true로 설정된다.
+         * currentSrc : audio 객체를 위한 오디오 파일의 URL
+         * preload : 페이지가 출력되기 전에 미디어 파일을 미리 로드할지 지정한다. 이 책을 쓰는 시점에서는 모든 브라우저에서 이 속성의 수행되지 않았다.
+         *
+         * 이벤트
+         * progress : 브라우저가 파일을 로드하면서 데이터를 가져올 때 발생하는 이벤트다. (이것은 아직 브라우저마다 지원 여부가 다양하기 때문에 주의해서 사용해야 한다.)
+         * canplaythrough : 당장 재생을 시작해도 오디오 요소를 시작부터 끝까지 재생할 수 있다고 계산되면 발생하는 이벤트이다.
+         * playing : 오디오가 재생 중이면 true로 설정된다.
+         * volumechange : volume 속성이나 muted 속성에 변경이 생기면 true로 설정된다.
+         * ended : 오디오 파일의 재생이 duration에 다다르고 재생을 멈추면 true로 설정된다.
+         ***/
+
+        function init() {
+            var theCanvas = document.getElementById("canvasOne");
+            var context = theCanvas.getContext("2d");
+            var audioElement = document.getElementById("theAudio");
+
+            audioElement.addEventListener("progress", updateLoadingStatus, false);
+            audioElement.addEventListener("canplaythrough", audioLoaded, false);
+            audioElement.load();
+
+            function updateLoadingStatus() {
+                var audioElement = document.getElementById("theAudio");
+                var percentLoaded = parseInt(((audioElement.buffered.end(0)/audioElement.duration)*100));
+                document.getElementById("loadingStatus").innerHTML = "loaded" + percentLoaded + "%";
+            }
+
+            function audioLoaded() {
+                audioElement.play();
+                setInterval(drawScreen, 33);
+            }
+
+            function drawScreen() {
+                // 배경
+                context.fillStyle = "#ffffaa";
+                context.fillRect(0, 0, theCanvas.width, theCanvas.height);
+
+                // 사각형 박스
+                context.strokeStyle = "#000000";
+                context.strokeRect(5, 5, theCanvas.width-10, theCanvas.height-10);
+
+                // 문자열
+                context.fillStyle = "#000000";
+                context.fillText("Duration:" + audioElement.duration, 20, 20);
+                context.fillText("Current time:" + audioElement.currentTime, 20, 40);
+                context.fillText("Loop:" + audioElement.loop, 20, 60);
+                context.fillText("Autoplay:" + audioElement.autoplay, 20, 80);
+                context.fillText("Muted:" + audioElement.muted, 20, 100);
+                context.fillText("Controls:" + audioElement.controls, 20, 120);
+                context.fillText("Volume:" + audioElement.volume, 20, 140);
+                context.fillText("Paused:" + audioElement.paused, 20, 160);
+                context.fillText("Ended:" + audioElement.ended, 20, 180);
+                context.fillText("Source:" + audioElement.currentSrc, 20, 200);
+                context.fillText("Can Play OGG:" + audioElement.canPlayType("audio/ogg"), 20, 220);
+                context.fillText("Can Play WAV:" + audioElement.canPlayType("audio/wav"), 20, 240);
+                context.fillText("Can Play MP3:" + audioElement.canPlayType("audio/mp3"), 20, 260);
+            }
+        }
+    </script>
+</head>
+<body onload="init();">
+    <div style="position: absolute; top: 50px; left: 50px;">
+        <canvas id="canvasOne" width="530" height="300">
+            Your browser does not support HTML5 Canvas.
+        </canvas>
+    </div>
+
+    <div id="loadingStatus">
+        0%
+    </div>
+
+    <div style="position: absolute; top: 50px; left: 600px;">
+        <audio id="theAudio" controls>
+            <source src="/Applications/html5_workspace/HTML5_study/dhheo/html/resources/canvas/audio/broken_glass.mp3" type="audio/mp3"/>
+            <source src="/Applications/html5_workspace/HTML5_study/dhheo/html/resources/canvas/audio/broken_glass.ogg" type="audio/ogg"/>
+            <source src="/Applications/html5_workspace/HTML5_study/dhheo/html/resources/canvas/audio/broken_glass.wav" type="audio/wav"/>
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+</body>
+</html>

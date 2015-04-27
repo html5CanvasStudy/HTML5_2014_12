@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>part7-4</title>
+    <script type="text/javascript">
+        function init() {
+            var theCanvas = document.getElementById("canvasOne");
+            var context = theCanvas.getContext("2d");
+            var audioElement = document.createElement("audio");
+            document.body.appendChild(audioElement);
+            var audioType = supportedAudioFormat(audioElement);
+
+            if ( audioType == "" ) {
+                alert("no audio support");
+                return;
+            }
+
+            audioElement.setAttribute("src", "/Applications/html5_workspace/HTML5_study/dhheo/html/resources/canvas/audio/broken_glass." + audioType);
+            audioElement.addEventListener("canplaythrough", audioLoaded, false);
+
+            function supportedAudioFormat() {
+                var returnExtension = "";
+                var OGG = "ogg";
+                var WAV = "wav";
+                var MP3 = "mp3";
+
+                if ( returnCanPlayType(OGG) ) returnExtension = OGG;
+                else if ( returnCanPlayType(WAV) ) returnExtension = WAV;
+                else if ( returnCanPlayType(MP3) ) returnExtension = MP3;
+
+                return returnExtension;
+            }
+
+            function returnCanPlayType(type) {
+                return audioElement.canPlayType("audio/" + type) == "probably" || audioElement.canPlayType("audio/" + type) == "maybe";
+            }
+
+            function updateLoadingStatus() {
+                var audioElement = document.getElementById("theAudio");
+                var percentLoaded = parseInt(((audioElement.buffered.end(0)/audioElement.duration)*100));
+                document.getElementById("loadingStatus").innerHTML = "loaded" + percentLoaded + "%";
+            }
+
+            function audioLoaded() {
+                audioElement.play();
+                setInterval(drawScreen, 33);
+            }
+
+            function drawScreen() {
+                // 배경
+                context.fillStyle = "#ffffaa";
+                context.fillRect(0, 0, theCanvas.width, theCanvas.height);
+
+                // 사각형 박스
+                context.strokeStyle = "#000000";
+                context.strokeRect(5, 5, theCanvas.width-10, theCanvas.height-10);
+
+                // 문자열
+                context.fillStyle = "#000000";
+                context.fillText("Duration:" + audioElement.duration, 20, 20);
+                context.fillText("Current time:" + audioElement.currentTime, 20, 40);
+                context.fillText("Loop:" + audioElement.loop, 20, 60);
+                context.fillText("Autoplay:" + audioElement.autoplay, 20, 80);
+                context.fillText("Muted:" + audioElement.muted, 20, 100);
+                context.fillText("Controls:" + audioElement.controls, 20, 120);
+                context.fillText("Volume:" + audioElement.volume, 20, 140);
+                context.fillText("Paused:" + audioElement.paused, 20, 160);
+                context.fillText("Ended:" + audioElement.ended, 20, 180);
+                context.fillText("Source:" + audioElement.currentSrc, 20, 200);
+                context.fillText("Can Play OGG:" + audioElement.canPlayType("audio/ogg"), 20, 220);
+                context.fillText("Can Play WAV:" + audioElement.canPlayType("audio/wav"), 20, 240);
+                context.fillText("Can Play MP3:" + audioElement.canPlayType("audio/mp3"), 20, 260);
+            }
+        }
+    </script>
+</head>
+<body onload="init();">
+    <div style="position: absolute; top: 50px; left: 50px;">
+        <canvas id="canvasOne" width="530" height="300">
+            Your browser does not support HTML5 Canvas.
+        </canvas>
+    </div>
+</body>
+</html>
