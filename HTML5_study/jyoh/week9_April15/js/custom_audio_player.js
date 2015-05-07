@@ -71,7 +71,7 @@ function executeApp() {
 
   function drawScreen() {
 
-    console.log(canvas.width + ' ' + canvas.height);
+    //console.log(canvas.width + ' ' + canvas.height);
     ctx.fillStyle = '#FFFFAA';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -110,6 +110,7 @@ function executeApp() {
       ctx.drawImage(buttonSheet, 0, 32, bW, bH, playX, playY, bW, bH);
     }
 
+    console.log(audioTag.loop);
     //Loop Button
     if(audioTag.loop) {
       ctx.drawImage(buttonSheet, 114, 32, bW, bH, loopX, loopY, bW, bH);
@@ -118,6 +119,9 @@ function executeApp() {
     }
 
     // Play Background
+    ctx.drawImage(buttonSheet, 32, 0, playBackW, bH, playBackX, playBackY, playBackW, bH);
+
+    // Volume Background
     ctx.drawImage(buttonSheet, 32, 32, volBackW, bH, volBackX, volBackY, volBackW, bH);
 
     var slideIncrement = playBackW/audioTag.duration;
@@ -130,6 +134,7 @@ function executeApp() {
     }
 
     if(volumeSliderDrag) {
+      console.log('dragging volume slider!');
       volumeSliderX = mouseX;
       if (volumeSliderX > volumeSliderEnd) {
         volumeSliderX = volumeSliderEnd;
@@ -143,11 +148,13 @@ function executeApp() {
     }
 
     ctx.drawImage(buttonSheet, 238, 0, slideW, bH, volumeSliderX, volumeSliderY, slideW, bW);
+    audioTag.volume = (volumeSliderX - volumeSliderStart) * volumeIncrement;
     timeWait++;
   }
 
 
   function mouseDown (e) {
+    console.log('mouse down!');
     if((mouseY >= volumeSliderY) && (mouseY <= volumeSliderY + slideH)
       && (mouseX >= volumeSliderX) && (mouseX <= volumeSliderX + slideW)) {
       volumeSliderDrag = true;
@@ -173,6 +180,7 @@ function executeApp() {
   }
 
   function mouseUp(e) {
+    console.log('mouse up!');
     if(timeWait >= buttonWait) {
       timeWait = 0;
       //플레이 눌림
